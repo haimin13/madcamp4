@@ -95,7 +95,7 @@ public class StageListSceneManager : MonoBehaviour
             {
                 Debug.Log("character not selected");
             }
-            else if (!GameDataManager.Instance.charaStates[selected].isAlive)
+            else if (!GameDataManager.Instance.charaStatus[selected].isAlive)
             {
                 Debug.Log("the character is dead!");
             }

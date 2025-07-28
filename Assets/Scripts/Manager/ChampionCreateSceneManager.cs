@@ -105,7 +105,7 @@ public class ChampionCreateSceneManager : MonoBehaviour
         if (GameDataManager.Instance != null)
         {
             GameDataManager.Instance.GetEnemiesData();
-            GameDataManager.Instance.UpdateCharacterState(0);
+            GameDataManager.Instance.UpdateCharacterStatus(null);
         }
         SceneManager.LoadScene("StageListScene");
     }

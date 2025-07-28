@@ -8,10 +8,18 @@ public class EnemyListResponse
     public int runId;
     public string enemiesJson;
 }
-
-public class CurrentCharacterState
+public class TypeChartResponse
 {
+    public string status;
+    public string enemy;
+    public string type_chart;
+}
+
+public class CurrentCharacterStatus
+{
+    public string charaName;
     public int currentHp;
+    public int maxHp;
     public bool isAlive;
 }
 public class GameDataManager : MonoBehaviour
@@ -19,7 +27,7 @@ public class GameDataManager : MonoBehaviour
     public static GameDataManager Instance { get; private set; }
     public int currentRound = 1;
     public int selectedChara = 99;
-    public List<CurrentCharacterState> charaStates = null; 
+    public List<CurrentCharacterStatus> charaStatus = null; 
     public int runId;
     public Dictionary<string, Dictionary<string, float>> typeChart;
     public APIRequester apiRequester;
@@ -75,23 +83,25 @@ public class GameDataManager : MonoBehaviour
             Debug.Log(error);
         });
     }
-    public void UpdateCharacterState(int idx, CurrentCharacterState newState = null)
+    public void UpdateCharacterStatus(List<CurrentCharacterStatus> newStatus = null)
     {
-        if (charaStates == null)
+        if (charaStatus == null) // Initialize
         {
-            charaStates = new List<CurrentCharacterState>();
+            charaStatus = new List<CurrentCharacterStatus>();
             List<CharacterData> characters = CharacterSheet.Instance.characters;
             for (int i = 0; i < characters.Count; i++)
             {
-                CurrentCharacterState state = new CurrentCharacterState();
-                state.currentHp = characters[i].stats.hp;
-                state.isAlive = true;
-                charaStates.Add(state);
+                CurrentCharacterStatus status = new CurrentCharacterStatus();
+                status.charaName = characters[i].character_name;
+                status.maxHp = characters[i].stats.hp + 100; // 체력 수치
+                status.currentHp = status.maxHp;
+                status.isAlive = true;
+                charaStatus.Add(status);
             }
         }
-        else if (0 <= idx && idx < charaStates.Count)
+        else if (newStatus != null)
         {
-            charaStates[idx] = newState;
+            charaStatus = newStatus;
         }
         else Debug.Log("Invalid idx");
     }
@@ -100,7 +110,19 @@ public class GameDataManager : MonoBehaviour
     {
         apiRequester.SendJsonRequest($"/api/runs/{runId}/floors/{currentRound}", "GET", null, null, (response) =>
         {
-            typeChart = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, float>>>(response);
+
+            var res = JsonConvert.DeserializeObject<TypeChartResponse>(response);
+            if (res.status == "completed")
+            {
+                var type_chart = JsonConvert.DeserializeObject<Dictionary<string, string>>(res.type_chart);
+                var charaToEnemy = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, float>>>(type_chart["player_vs_enemy"]);
+                var enemyToChara = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, float>>>(type_chart["enemy_vs_player"]);
+                typeChart = new Dictionary<string, Dictionary<string, float>>(charaToEnemy);
+                foreach (var kvp in enemyToChara)
+                {
+                    typeChart[kvp.Key] = kvp.Value;
+                }
+            }
         }, (error) =>
         {
             Debug.Log("상성표 받아오기 실패!");
