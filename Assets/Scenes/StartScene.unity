@@ -618,6 +618,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f7f99cec4f37584e9202c3666017863, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  loginButton: {fileID: 2136763290}
 --- !u!4 &1073089703
 Transform:
   m_ObjectHideFlags: 0
@@ -780,7 +781,7 @@ GameObject:
   - component: {fileID: 2136763291}
   - component: {fileID: 2136763290}
   m_Layer: 5
-  m_Name: Button
+  m_Name: LoginButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

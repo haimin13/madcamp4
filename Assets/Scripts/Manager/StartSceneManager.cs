@@ -22,7 +22,7 @@ public class StartSceneManager : MonoBehaviour
     void Login()
     {
         // api 요청
-        StartCoroutine(APIRequester.Instance.SendJsonRequest("/login", "POST", null, null, (response) =>
+        StartCoroutine(APIRequester.Instance.SendJsonRequest("/api/auth/guest", "POST", null, null, (response) =>
         {
             SceneManager.LoadScene("ChampCreateScene");
         }, (error) =>

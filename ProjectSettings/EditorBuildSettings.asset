@@ -8,4 +8,19 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/BattleScene.unity
     guid: 2cda990e2423bbf4892e6590ba056729
+  - enabled: 1
+    path: Assets/Scenes/ChampCreateScene.unity
+    guid: 5a81270eb1274a641ad58e2575918d19
+  - enabled: 1
+    path: Assets/Scenes/ClearScene.unity
+    guid: e593a924f6ec74c4b81b0e86131b54b8
+  - enabled: 1
+    path: Assets/Scenes/OverScene.unity
+    guid: 551b8fbefa61920478e73bbc9972ec7f
+  - enabled: 1
+    path: Assets/Scenes/StageListScene.unity
+    guid: 9a7a5b7b904b08845a87a6d53067b3d8
+  - enabled: 1
+    path: Assets/Scenes/StartScene.unity
+    guid: 7ac808b9cf6316a448517db9f100ad4d
   m_configObjects: {}

@@ -10,51 +10,103 @@ public class ChampionCreateSceneManager : MonoBehaviour
 {
     public Button OKButton;
     public Button sendButton;
-    public GameObject synopsisPanel;
+    public Button nextButton;
+    public Button startButton;
+    public GameObject storyPanel;
     public GameObject loadingPanel;
     public GameObject champInfoPanel;
+    public List<TextMeshProUGUI> countText;
+    public TextMeshProUGUI champInfoText;
     public TMP_InputField champDescription;
+    int createdCount = 0;
 
     // Start is called before the first frame update
     void Start()
     {
         OKButton.onClick.AddListener(OnOKButtonClicked);
         sendButton.onClick.AddListener(OnSendButtonClicked);
+        nextButton.onClick.AddListener(OnNextButtonClicked);
+        startButton.onClick.AddListener(OnStartButtonClicked);
+
+        OnNextButtonClicked();
+        storyPanel.SetActive(true);
         loadingPanel.SetActive(false);
     }
 
     void OnOKButtonClicked()
     {
-        synopsisPanel.SetActive(false);  // 비활성화
+        storyPanel.SetActive(false);  // 비활성화
     }
 
     void OnSendButtonClicked()
     {
         // 입력 처리 json화
         string desc = champDescription.text;
+        Debug.Log(desc);
 
         loadingPanel.SetActive(true);
+        var req = new Dictionary<string, object>();
+        req["user_prompt"] = desc;
+
+        string json = JsonConvert.SerializeObject(req);
+        Debug.Log(json);
         if (APIRequester.Instance != null)
         {
-            // 수정하셈
-            StartCoroutine(APIRequester.Instance.SendJsonRequest("/", "GET", null, null, (response) =>
+            StartCoroutine(APIRequester.Instance.SendJsonRequest("/api/v1/characters", "POST", json, null, (response) =>
             {
-                Debug.Log("successful!");
+                Debug.Log("POST successful!");
                 loadingPanel.SetActive(false);
                 if (GameDataManager.Instance != null)
                 {
+                    Debug.Log("GameDataManager.Instance != null");
                     GameDataManager.Instance.SetChampion(response);
                 }
                 champInfoPanel.SetActive(true);
+                if (createdCount > 2)
+                {
+                    nextButton.gameObject.SetActive(false);
+                    startButton.gameObject.SetActive(true);
+                }
+                ShowChampDescription(CharacterSheet.Instance.characters.Count - 1);
             }, (error) =>
             {
-                Debug.Log("unsuccessful!");
+                Debug.Log("POST unsuccessful! Try Again");
                 loadingPanel.SetActive(false);
             }));
         }
     }
+
+    void ShowChampDescription(int champIdx)
+    {
+        CharacterData chara = CharacterSheet.Instance.characters[champIdx];
+        string skillsText = "";
+        foreach (var skill in chara.skills) {
+            skillsText += $"\n\t{skill.skill_name}: {skill.description}";
+        }
+        champInfoText.text = (
+            $"이름: {chara.character_name}\n" +
+            $"설명: {chara.description}\n" +
+            $"타입: {chara.character_type}\n" +
+            $"스탯:\n\t체력: {chara.stats.hp}\n\t공격: {chara.stats.atk}\n\t방어: {chara.stats.def}\n\t" + 
+            $"특공: {chara.stats.sp_atk}\n\t특방: {chara.stats.sp_def}\n\t스피드: {chara.stats.speed}\n" +
+            "스킬:" + skillsText +"\n");
+    }
+    void OnNextButtonClicked()
+    {
+        createdCount += 1;
+        foreach (var text in countText)
+        {
+            text.text = $"({createdCount}/3)";
+        }
+        champInfoPanel.SetActive(false);
+    }
     void OnStartButtonClicked()
     {
+        if (GameDataManager.Instance != null)
+        {
+            GameDataManager.Instance.GetEnemiesData();
+            GameDataManager.Instance.UpdateCharacterState(0);
+        }
         SceneManager.LoadScene("StageListScene");
     }
     void Update()
