@@ -8,12 +8,18 @@ using TMPro;
 
 public class BattleSceneView : MonoBehaviour
 {
+    public BattleSceneModel model;
     public GameObject skillPanel;
     public List<Button> skillButtons;
     public GameObject charaStatus;
     public GameObject enemyStatus;
     public BattleSceneController controller;
     public TextMeshProUGUI logText;
+    public Button switchPanelButton;
+    public GameObject switchPanel;
+    public List<Button> charaButtons;
+    public Button switchButton;
+    public Button cancelButton;
     public string first = " ";
     public string second = " ";
     // Start is called before the first frame update
@@ -26,6 +32,15 @@ public class BattleSceneView : MonoBehaviour
             skillButtons[i].onClick.AddListener(() => OnSkillClicked(idx));
         }
         SetLogtext();
+        switchPanelButton.onClick.AddListener(OnSwitchPanelButtonClicked);
+        switchButton.onClick.AddListener(OnSwitchButtonClicked);
+        cancelButton.onClick.AddListener(OnCancelButtonClicked);
+        charaButtons = new List<Button>(switchPanel.GetComponentsInChildren<Button>(true));
+        for (int i = 0; i < charaButtons.Count; i++)
+        {
+            int idx = i;
+            charaButtons[i].onClick.AddListener(() => OnCharaClicked(idx));
+        }
     }
 
     void OnSkillClicked(int btnIndex)
@@ -87,6 +102,35 @@ public class BattleSceneView : MonoBehaviour
         first = second;
         second = sentence;
         logText.text = first + "\n" + second;
+    }
+    public void OnSwitchPanelButtonClicked()
+    {
+        ShowSwitchPanel();
+    }
+    public void ShowSwitchPanel()
+    {
+        switchPanel.SetActive(true);
+        // 캐릭터 스테이터스 반영해서 캐릭터 표시
+    }
+
+    public void OnSwitchButtonClicked()
+    {
+        controller.SwitchCharacter();
+    }
+
+    public void OnCharaClicked(int idx)
+    {
+        controller.ChangeCandidate(idx);
+    }
+    public void ShowCandidate(int idx)
+    {
+        
+    }
+    public void OnCancelButtonClicked()
+    {
+        if (model.isDead)
+            return;
+        switchPanel.SetActive(false);
     }
 
     // Update is called once per frame

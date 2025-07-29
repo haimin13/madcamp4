@@ -9,8 +9,10 @@ public class BattleSceneModel : MonoBehaviour
     public List<CurrentCharacterStatus> charaStatus;
     public CurrentCharacterStatus enemyStatus;
     public int currentChara;
+    public int candidate = 99;
     public bool isOver = false;
     public bool isWin;
+    public bool isDead = false;
     public int currentRound;
     public List<Skill> charaSkills;
     public List<Skill> enemySkills;
