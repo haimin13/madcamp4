@@ -44,7 +44,14 @@ public class StageListSceneManager : MonoBehaviour
             GameObject item = Instantiate(enemyItemPrefab, contentParent);
 
             // 구성요소 연결 (Image, Text 등)
-            item.transform.Find("EnemyImagePreview").GetComponent<Image>().sprite = enemyList[i].character_sprite;
+            Debug.Log($"Loading sprite for enemy {i}: {enemyList[i].image_url}");
+            APIRequester.Instance.GetSprite(enemyList[i].image_url, (sprite) =>
+            {
+                if (sprite != null)
+                {
+                    item.transform.Find("EnemyImagePreview").GetComponent<Image>().sprite = sprite;
+                }
+            });
             item.transform.Find("EnemyName").GetComponent<TextMeshProUGUI>().text = enemyList[i].character_name;
             item.transform.Find("EnemyRound").GetComponent<TextMeshProUGUI>().text = $"Round {i + 1}";
 
@@ -64,6 +71,14 @@ public class StageListSceneManager : MonoBehaviour
             Debug.Log(CharacterSheet.Instance.enemies.Count);
             var chara = CharacterSheet.Instance.enemies[GameDataManager.Instance.currentRound - 1];
             // image 추가
+            APIRequester.Instance.GetSprite(chara.image_url, (sprite) =>
+            {
+                if (sprite != null)
+                {
+                    enemyImage.sprite = sprite;
+                }
+            });
+
             enemyName.text = chara.character_name;
             enemyDescription.text = chara.description;
         }
