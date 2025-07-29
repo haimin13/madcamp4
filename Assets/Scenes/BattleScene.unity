@@ -1510,7 +1510,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 30.55
+  m_fontSize: 29.05
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -1712,8 +1712,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameDataManager: {fileID: 0}
   currentChara: 0
+  candidate: 99
   isOver: 0
   isWin: 0
+  isDead: 0
   currentRound: 0
   charaSkills: []
   enemySkills: []
@@ -2818,6 +2820,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb4bc2c77f38ef44e806945845a57bd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  model: {fileID: 989662798}
   skillPanel: {fileID: 1323001380}
   skillButtons:
   - {fileID: 5166670108495422353}
@@ -2828,6 +2831,12 @@ MonoBehaviour:
   enemyStatus: {fileID: 1108074919}
   controller: {fileID: 129510612}
   logText: {fileID: 734326259}
+  switchPanelButton: {fileID: 1874648796}
+  switchPanel: {fileID: 465394816}
+  charaButtons: []
+  candidateSkillPanel: {fileID: 2045874694}
+  switchButton: {fileID: 503804467}
+  cancelButton: {fileID: 749099278}
   first: ' '
   second: ' '
 --- !u!4 &1858715054

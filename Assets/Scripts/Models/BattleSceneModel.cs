@@ -54,14 +54,13 @@ public class BattleSceneModel : MonoBehaviour
         enemyStatus.isAlive = true;
         enemySkills = enemy.skills;
     }
-
-    public void LoadCharaSkills()
-    {
-        charaSkills = CharacterSheet.Instance.characters[currentChara].skills;
-    }
     public void LoadTypeChart()
     {
         typeChart = GameDataManager.Instance.typeChart;
+    }
+    public void LoadCharaSkills()
+    {
+        charaSkills = CharacterSheet.Instance.characters[currentChara].skills;
     }
     public int RankUpStat(int origStat, int step)
     {

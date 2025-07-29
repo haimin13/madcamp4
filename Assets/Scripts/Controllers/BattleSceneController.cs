@@ -15,6 +15,7 @@ public class BattleSceneController : MonoBehaviour
             apiRequester = APIRequester.Instance;
         model.LoadCurrentStatus();
         model.LoadTypeChart();
+
         view.ShowSkills(model.charaSkills);
         view.SetStatusPanel(model.charaStatus[model.currentChara], model.enemyStatus);
     }
@@ -26,14 +27,14 @@ public class BattleSceneController : MonoBehaviour
             UsePlayerSkill(skillIdx);
             if (model.isOver)
             {
-                view.ShowGameOver();
+                view.ShowGameOver(model.isWin);
                 return;
             }
                 
             UseEnemySkill();
             if (model.isOver)
             {
-                view.ShowGameOver();
+                view.ShowGameOver(model.isWin);
                 return;
             }
             if (!model.charaStatus[model.currentChara].isAlive)
@@ -45,7 +46,7 @@ public class BattleSceneController : MonoBehaviour
             UseEnemySkill();
             if (model.isOver)
             {
-                view.ShowGameOver();
+                view.ShowGameOver(model.isWin);
                 return;
             }
             if (!model.charaStatus[model.currentChara].isAlive)
@@ -56,7 +57,7 @@ public class BattleSceneController : MonoBehaviour
             UsePlayerSkill(skillIdx);
             if (model.isOver)
             {
-                view.ShowGameOver();
+                view.ShowGameOver(model.isWin);
                 return;
             }
             else view.SetSkillButtonsInteractable(true);
@@ -118,6 +119,7 @@ public class BattleSceneController : MonoBehaviour
             model.charaStatus[model.currentChara].currentHp = 0;
             model.charaStatus[model.currentChara].isAlive = false;
             view.SetLogtext($"{model.charaStatus[model.currentChara].charaName}은(는) 쓰러졌다!");
+            model.isDead = true;
             CheckGameState();
         }
     }
@@ -163,13 +165,25 @@ public class BattleSceneController : MonoBehaviour
         model.currentChara = model.candidate;
         model.candidate = 99;
         model.LoadCharaSkills();
-        if (!model.isDead)
+        if (!model.isDead) // 안죽었는데 교체로 턴 사용 -> 교체 후 상대 공격
         {
             UseEnemySkill();
+            if (model.isOver)
+            {
+                view.OnCancelButtonClicked();
+                view.ShowGameOver(model.isWin);
+                return;
+            }
+            if (!model.charaStatus[model.currentChara].isAlive)
+            {
+                view.ShowSwitchPanel();
+                return;
+            }
         }
         else
         {
             model.isDead = false;
+            view.OnCancelButtonClicked();
         }
     }
 

@@ -187,11 +187,21 @@ public class BattleSceneView : MonoBehaviour
     {
         if (model.isDead)
             return;
+        model.candidate = 99;
         switchPanel.SetActive(false);
     }
-    public void ShowGameOver()
+    public void ShowGameOver(bool isWin)
     {
-        
+        if (isWin)
+        {
+            Debug.Log("You Win");
+            // 게임오버 화면 구현
+            // 
+        }
+        else
+        {
+            Debug.Log("You Lost");
+        }
     }
 
     // Update is called once per frame

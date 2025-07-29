@@ -136,8 +136,8 @@ public class GameDataManager : MonoBehaviour
         Debug.Log("GetRoundInfo");
         StartCoroutine(apiRequester.SendJsonRequest($"/api/runs/{runId}/floors/{currentRound}", "GET", null, null, (response) =>
         {
-            Debug.Log(response);
             var res = JsonConvert.DeserializeObject<TypeChartResponse>(response);
+            Debug.Log(res.status);
             if (res.status == "completed")
             {
                 var typeChart = new Dictionary<string, Dictionary<string, float>>();
@@ -155,7 +155,6 @@ public class GameDataManager : MonoBehaviour
             }
             else
             {
-                Debug.Log(res.status);
                 StartCoroutine(RetryGetRoundInfo(onComplete, onFail));
                 //onFail?.Invoke();
             }
