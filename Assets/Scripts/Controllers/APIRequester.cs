@@ -26,6 +26,7 @@ public class APIRequester : MonoBehaviour
     void Start()
     {
         baseUrl = "https://airouge.yyacht.camp";
+        //baseUrl = "http://localhost:8000";
     }
 
     // Update is called once per frame

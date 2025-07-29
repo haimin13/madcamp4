@@ -6,14 +6,19 @@ using Newtonsoft.Json;
 
 public class EnemyListResponse
 {
-    public string runId;
+    public string run_id;
     public List<CharacterData> enemies;
 }
 public class TypeChartResponse
 {
     public string status;
-    public string enemy;
-    public string type_chart;
+    public CharacterData enemy;
+    public TypeChartData type_chart;
+}
+public class TypeChartData
+{
+    public Dictionary<string, Dictionary<string, float>> player_vs_enemy { get; set; }
+    public Dictionary<string, Dictionary<string, float>> enemy_vs_player { get; set; }
 }
 
 public class CurrentCharacterStatus
@@ -83,7 +88,8 @@ public class GameDataManager : MonoBehaviour
         {
             Debug.Log("적 정보 받아옴!");
             var res = JsonConvert.DeserializeObject<EnemyListResponse>(response);
-            runId = res.runId;
+            Debug.Log(res.run_id);
+            runId = res.run_id;
             var charaList = res.enemies;
             CharacterSheet.Instance.enemies = charaList;
         }, (error) =>
@@ -121,28 +127,47 @@ public class GameDataManager : MonoBehaviour
         else Debug.Log("Invalid idx");
     }
 
-    public void GetRoundInfo()
+    public void GetRoundInfo(System.Action onComplete = null, System.Action onFail = null)
     {
-        apiRequester.SendJsonRequest($"/api/runs/{runId}/floors/{currentRound}", "GET", null, null, (response) =>
+        Debug.Log("GetRoundInfo");
+        StartCoroutine(apiRequester.SendJsonRequest($"/api/runs/{runId}/floors/{currentRound}", "GET", null, null, (response) =>
         {
-
+            Debug.Log(response);
             var res = JsonConvert.DeserializeObject<TypeChartResponse>(response);
             if (res.status == "completed")
             {
-                var type_chart = JsonConvert.DeserializeObject<Dictionary<string, string>>(res.type_chart);
-                var charaToEnemy = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, float>>>(type_chart["player_vs_enemy"]);
-                var enemyToChara = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, float>>>(type_chart["enemy_vs_player"]);
-                typeChart = new Dictionary<string, Dictionary<string, float>>(charaToEnemy);
-                foreach (var kvp in enemyToChara)
-                {
+                var typeChart = new Dictionary<string, Dictionary<string, float>>();
+
+                // player_vs_enemy
+                foreach (var kvp in res.type_chart.player_vs_enemy)
                     typeChart[kvp.Key] = kvp.Value;
-                }
+
+                // enemy_vs_player
+                foreach (var kvp in res.type_chart.enemy_vs_player)
+                    typeChart[kvp.Key] = kvp.Value;
+
+                this.typeChart = typeChart; // 원하는 곳에 저장
+                onComplete?.Invoke();
+            }
+            else
+            {
+                Debug.Log(res.status);
+                StartCoroutine(RetryGetRoundInfo(onComplete, onFail));
+                //onFail?.Invoke();
             }
         }, (error) =>
         {
             Debug.Log("상성표 받아오기 실패!");
             Debug.Log(error);
-        });
+            StartCoroutine(RetryGetRoundInfo(onComplete, onFail));
+            //onFail?.Invoke();
+        }));
+    }
+    
+    private IEnumerator RetryGetRoundInfo(System.Action onComplete, System.Action onFail)
+    {
+        yield return new WaitForSeconds(1f);
+        GetRoundInfo(onComplete, onFail);
     }
 
     public void SaveCharacters()

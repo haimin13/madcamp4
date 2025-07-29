@@ -86,7 +86,7 @@ public class StageListSceneManager : MonoBehaviour
             int index = charaToggles.IndexOf(activeToggle);
             if (GameDataManager.Instance != null)
                 Debug.Log("GameDataManager.Instance.selectedChara = index");
-                GameDataManager.Instance.selectedChara = index;
+            GameDataManager.Instance.selectedChara = index;
         }
     }
 
@@ -107,9 +107,16 @@ public class StageListSceneManager : MonoBehaviour
             else
             {
                 loadingPanel.SetActive(true);
-                GameDataManager.Instance.GetRoundInfo();
-                loadingPanel.SetActive(true);
-                SceneManager.LoadScene("BattleScene");
+                GameDataManager.Instance.GetRoundInfo(() =>
+                {
+                    // 이 시점에서만 데이터 로딩 끝났음!
+                    loadingPanel.SetActive(false);
+                    SceneManager.LoadScene("BattleScene");
+                    
+                }, () =>
+                {
+                    loadingPanel.SetActive(false);
+                });
             }
         }
     }
