@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System;
 using UnityEngine;
 using UnityEngine.Networking;
 using System.Text;
@@ -96,4 +98,77 @@ public class APIRequester : MonoBehaviour
             onError?.Invoke(request.error);
         }
     }
+
+
+    #region 이미지 다운로드 및 캐싱
+
+    /// <summary>
+    /// 이미지 URL을 받아 스프라이트를 반환합니다. 캐시된 이미지를 우선 사용합니다.
+    /// </summary>
+    /// <param name="url">이미지의 전체 웹 URL</param>
+    /// <param name="onComplete">스프라이트 로딩이 완료되었을 때 호출될 콜백</param>
+    public void GetSprite(string url, Action<Sprite> onComplete)
+    {
+        // URL이 비어있으면 아무 작업도 하지 않음
+        if (string.IsNullOrEmpty(url))
+        {
+            onComplete?.Invoke(null);
+            return;
+        }
+
+        // 상대 경로인 경우 (예: /static/images/...), baseUrl을 붙여줌
+        if (url.StartsWith("/"))
+        {
+            url = baseUrl + url;
+        }
+
+        StartCoroutine(LoadSpriteCoroutine(url, onComplete));
+    }
+
+    private IEnumerator LoadSpriteCoroutine(string url, Action<Sprite> onComplete)
+    {
+        string localPath = GetLocalPathFromUrl(url);
+
+        if (File.Exists(localPath))
+        {
+            // 캐시에서 이미지 불러오기
+            byte[] fileData = File.ReadAllBytes(localPath);
+            Texture2D texture = new Texture2D(2, 2);
+            texture.LoadImage(fileData);
+            Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+            onComplete?.Invoke(sprite);
+        }
+        else
+        {
+            // 웹에서 이미지 다운로드
+            using (UnityWebRequest www = UnityWebRequestTexture.GetTexture(url))
+            {
+                yield return www.SendWebRequest();
+
+                if (www.result == UnityWebRequest.Result.Success)
+                {
+                    Texture2D texture = DownloadHandlerTexture.GetContent(www);
+                    byte[] pngData = texture.EncodeToPNG();
+                    File.WriteAllBytes(localPath, pngData); // 로컬에 저장 (캐싱)
+
+                    Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+                    onComplete?.Invoke(sprite);
+                }
+                else
+                {
+                    Debug.LogError($"이미지 다운로드 실패: {url}\n에러: {www.error}");
+                    onComplete?.Invoke(null);
+                }
+            }
+        }
+    }
+
+    private string GetLocalPathFromUrl(string url)
+    {
+        string fileName = url.GetHashCode() + ".png";
+        return Path.Combine(Application.persistentDataPath, fileName);
+    }
+
+    #endregion
 }
+
