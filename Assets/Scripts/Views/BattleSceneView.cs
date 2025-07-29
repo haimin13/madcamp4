@@ -111,6 +111,11 @@ public class BattleSceneView : MonoBehaviour
     public void ShowSwitchPanel()
     {
         switchPanel.SetActive(true);
+        var candidateSkillButtons = new List<Button>(candidateSkillPanel.GetComponentsInChildren<Button>(true));
+        foreach (var btn in candidateSkillButtons)
+        {
+            btn.gameObject.SetActive(false);
+        }
         // 캐릭터 스테이터스 반영해서 캐릭터 표시
         for (int i = 0; i < model.charaStatus.Count; i++)
         {
@@ -130,8 +135,16 @@ public class BattleSceneView : MonoBehaviour
             }
             var debuff = btn.transform.Find("DebuffText").GetComponent<TextMeshProUGUI>();
             if (debuff != null)
+                debuff.text = chara.debuff;
+
+            // 이미지 추가
+
+            // 죽은 캐릭터 표시
+            if (!chara.isAlive)
             {
-                
+                var btnBg = btn.GetComponent<Image>();
+                if (btnBg != null)
+                    btnBg.color = Color.red;
             }
         }
         
@@ -152,6 +165,7 @@ public class BattleSceneView : MonoBehaviour
         for (int i = 0; i < candidateSkillButtons.Count; i++)
         {
             Button btn = candidateSkillButtons[i];
+            btn.gameObject.SetActive(true);
             var nameObj = btn.transform.Find("SkillNameText");
             if (nameObj != null)
             {
@@ -174,6 +188,10 @@ public class BattleSceneView : MonoBehaviour
         if (model.isDead)
             return;
         switchPanel.SetActive(false);
+    }
+    public void ShowGameOver()
+    {
+        
     }
 
     // Update is called once per frame

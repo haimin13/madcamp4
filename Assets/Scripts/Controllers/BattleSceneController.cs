@@ -24,30 +24,43 @@ public class BattleSceneController : MonoBehaviour
         if (model.charaStatus[model.currentChara].tmpSpeed >= model.enemyStatus.tmpSpeed)
         {
             UsePlayerSkill(skillIdx);
-            if (!model.isOver)
+            if (model.isOver)
             {
-                UseEnemySkill();
-                view.SetSkillButtonsInteractable(true);
+                view.ShowGameOver();
+                return;
             }
+                
+            UseEnemySkill();
+            if (model.isOver)
+            {
+                view.ShowGameOver();
+                return;
+            }
+            if (!model.charaStatus[model.currentChara].isAlive)
+                view.ShowSwitchPanel();
+            else view.SetSkillButtonsInteractable(true);
         }
         else
         {
             UseEnemySkill();
-            if (!model.isOver)
+            if (model.isOver)
             {
-                if (model.charaStatus[model.currentChara].isAlive)
-                {
-                    UsePlayerSkill(skillIdx);
-                    view.SetSkillButtonsInteractable(true);
-                }
-                else
-                {
-                    view.ShowSwitchPanel();
-                    view.SetSkillButtonsInteractable(true);
-                }
+                view.ShowGameOver();
+                return;
             }
+            if (!model.charaStatus[model.currentChara].isAlive)
+            {
+                view.ShowSwitchPanel();
+                return;
+            }
+            UsePlayerSkill(skillIdx);
+            if (model.isOver)
+            {
+                view.ShowGameOver();
+                return;
+            }
+            else view.SetSkillButtonsInteractable(true);
         }
-        // 내 캐릭 죽고 남은 캐릭 남아있는 경우 추가
     }
     public void UsePlayerSkill(int skillIdx)
     {
@@ -125,10 +138,7 @@ public class BattleSceneController : MonoBehaviour
                 model.isOver = true;
                 model.isWin = false;
             }
-            else
-            {
-                // 스위치 패널 보여주기
-            }
+            return;
         }
     }
 
@@ -145,9 +155,22 @@ public class BattleSceneController : MonoBehaviour
             Debug.Log("no candidate selected!");
             return;
         }
+        if (!model.charaStatus[model.candidate].isAlive)
+        {
+            Debug.Log("It is DEAD!");
+            return;
+        }
         model.currentChara = model.candidate;
         model.candidate = 99;
         model.LoadCharaSkills();
+        if (!model.isDead)
+        {
+            UseEnemySkill();
+        }
+        else
+        {
+            model.isDead = false;
+        }
     }
 
     // Update is called once per frame

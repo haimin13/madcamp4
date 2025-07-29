@@ -111,7 +111,7 @@ public class GameDataManager : MonoBehaviour
                 CurrentCharacterStatus status = new CurrentCharacterStatus();
                 status.charaName = characters[i].character_name;
                 status.charaType = characters[i].character_type;
-                status.debuff = "normal";
+                status.debuff = "정상";
                 status.duration = 0;
                 status.maxHp = characters[i].stats.hp + 100; // 체력 수치
                 status.currentHp = status.maxHp;
