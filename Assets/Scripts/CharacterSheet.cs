@@ -42,11 +42,26 @@ public class CharacterSheet : ScriptableObject
         CharacterData character = JsonUtility.FromJson<CharacterData>(jsonText);
         return character;
     }
-    public string ToJsonOfCharacters()
+    public string ToJsonOfCharacters(string req = null)
     {
-        CharacterDataListWrapper wrapper = new CharacterDataListWrapper();
-        wrapper.characters = this.characters;
-        return JsonUtility.ToJson(wrapper, true);
+        if (req == "RunCreateRequest")
+        {
+            RunCreateRequestWrapper wrapper = new RunCreateRequestWrapper();
+            wrapper.player_characters = this.characters;
+            return JsonUtility.ToJson(wrapper, true);
+        }
+        else if (req == "GameCompleteRequest")
+        {
+            GameCompleteRequestWrapper wrapper = new GameCompleteRequestWrapper();
+            wrapper.winning_characters = this.characters;
+            return JsonUtility.ToJson(wrapper, true);
+        }
+        else
+        {
+            CharacterDataListWrapper wrapper = new CharacterDataListWrapper();
+            wrapper.characters = this.characters;
+            return JsonUtility.ToJson(wrapper, true);
+        }
     }
 }
 
@@ -55,4 +70,12 @@ public class CharacterSheet : ScriptableObject
 public class CharacterDataListWrapper
 {
     public List<CharacterData> characters;
+}
+public class RunCreateRequestWrapper
+{
+    public List<CharacterData> player_characters;
+}
+public class GameCompleteRequestWrapper
+{
+    public List<CharacterData> winning_characters;
 }

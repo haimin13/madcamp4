@@ -1,0 +1,307 @@
+{
+    "characters": [
+        {
+            "character_id": "",
+            "character_name": "파워풀 기린",
+            "description": "거대한 몸에서 뿜어져 나오는 압도적인 힘으로 적을 제압하는 기린 전사입니다.",
+            "image_url": "/static/images/image_6f97a642-d5b5-4599-b1ec-136d335de0af.png",
+            "stats": {
+                "hp": 90,
+                "atk": 120,
+                "def": 80,
+                "sp_atk": 100,
+                "sp_def": 60,
+                "speed": 50
+            },
+            "character_type": "천둥 발굽",
+            "skills": [
+                {
+                    "skill_name": "우레 발굽",
+                    "description": "온몸의 무게를 실어 적에게 강력한 발굽 공격을 가해 대지를 뒤흔듭니다.",
+                    "base_power": 100,
+                    "damage_type": "물리",
+                    "skill_type": "정면 돌파",
+                    "visual_effect_type": 0,
+                    "shake_effect": {
+                        "particle_color": "#A0522D"
+                    },
+                    "projectile_effect": {
+                        "shape": "",
+                        "count": 0,
+                        "color": ""
+                    },
+                    "laser_effect": {
+                        "origin": "",
+                        "thickness": 1,
+                        "color": ""
+                    }
+                },
+                {
+                    "skill_name": "초원 투창",
+                    "description": "초원의 기운을 응축한 창을 던져 원거리의 적을 정확하게 공격합니다.",
+                    "base_power": 90,
+                    "damage_type": "물리",
+                    "skill_type": "원거리 사격",
+                    "visual_effect_type": 0,
+                    "shake_effect": {
+                        "particle_color": ""
+                    },
+                    "projectile_effect": {
+                        "shape": "막대기",
+                        "count": 1,
+                        "color": "#7CFC00"
+                    },
+                    "laser_effect": {
+                        "origin": "",
+                        "thickness": 1,
+                        "color": ""
+                    }
+                },
+                {
+                    "skill_name": "광휘의 시선",
+                    "description": "높은 시야에서 순수한 빛의 줄기를 발사하여 지상의 적들을 불태웁니다.",
+                    "base_power": 110,
+                    "damage_type": "특수",
+                    "skill_type": "천상 광선",
+                    "visual_effect_type": 0,
+                    "shake_effect": {
+                        "particle_color": ""
+                    },
+                    "projectile_effect": {
+                        "shape": "",
+                        "count": 0,
+                        "color": ""
+                    },
+                    "laser_effect": {
+                        "origin": "TopToBottom",
+                        "thickness": 2,
+                        "color": "#FFFF00"
+                    }
+                },
+                {
+                    "skill_name": "질주하는 그림자",
+                    "description": "강력한 근력을 이용해 전방으로 빠르게 돌진하며 적들을 들이받아 피해를 줍니다.",
+                    "base_power": 80,
+                    "damage_type": "물리",
+                    "skill_type": "돌진 기동",
+                    "visual_effect_type": 0,
+                    "shake_effect": {
+                        "particle_color": "#36454F"
+                    },
+                    "projectile_effect": {
+                        "shape": "",
+                        "count": 0,
+                        "color": ""
+                    },
+                    "laser_effect": {
+                        "origin": "",
+                        "thickness": 2,
+                        "color": ""
+                    }
+                }
+            ]
+        },
+        {
+            "character_id": "",
+            "character_name": "에어컨 디액티베이터",
+            "description": "공조 시스템을 무력화하고 주변 환경을 교란하는 능력을 지닌 존재.",
+            "image_url": "/static/images/image_e2d7ed75-8efb-48c8-a891-f03ea2c4187c.png",
+            "stats": {
+                "hp": 80,
+                "atk": 50,
+                "def": 70,
+                "sp_atk": 120,
+                "sp_def": 70,
+                "speed": 110
+            },
+            "character_type": "냉기 교란자",
+            "skills": [
+                {
+                    "skill_name": "냉각파 방출",
+                    "description": "전방에 강력한 냉각파를 방출하여 적에게 냉기 피해를 입힙니다.",
+                    "base_power": 90,
+                    "damage_type": "특수",
+                    "skill_type": "냉기 제어",
+                    "visual_effect_type": 0,
+                    "shake_effect": {
+                        "particle_color": ""
+                    },
+                    "projectile_effect": {
+                        "shape": "",
+                        "count": 0,
+                        "color": ""
+                    },
+                    "laser_effect": {
+                        "origin": "Player",
+                        "thickness": 2,
+                        "color": "#00BFFF"
+                    }
+                },
+                {
+                    "skill_name": "과부하 유도",
+                    "description": "적의 시스템에 일시적인 과부하를 유도하여 잠시 동안 행동 불능 상태로 만듭니다.",
+                    "base_power": 70,
+                    "damage_type": "특수",
+                    "skill_type": "시스템 교란",
+                    "visual_effect_type": 0,
+                    "shake_effect": {
+                        "particle_color": "#FF4500"
+                    },
+                    "projectile_effect": {
+                        "shape": "",
+                        "count": 0,
+                        "color": ""
+                    },
+                    "laser_effect": {
+                        "origin": "",
+                        "thickness": 1,
+                        "color": ""
+                    }
+                },
+                {
+                    "skill_name": "서리 결정 폭탄",
+                    "description": "서리 결정을 생성하여 목표 위치에 발사, 폭발하며 광역 냉기 피해를 줍니다.",
+                    "base_power": 100,
+                    "damage_type": "특수",
+                    "skill_type": "빙결 폭파",
+                    "visual_effect_type": 0,
+                    "shake_effect": {
+                        "particle_color": ""
+                    },
+                    "projectile_effect": {
+                        "shape": "구체",
+                        "count": 3,
+                        "color": "#ADD8E6"
+                    },
+                    "laser_effect": {
+                        "origin": "",
+                        "thickness": 1,
+                        "color": ""
+                    }
+                },
+                {
+                    "skill_name": "에어컨 재밍",
+                    "description": "주변의 공기 흐름을 조작하여 적의 움직임을 방해하고 속도를 늦춥니다.",
+                    "base_power": 60,
+                    "damage_type": "특수",
+                    "skill_type": "환경 조작",
+                    "visual_effect_type": 0,
+                    "shake_effect": {
+                        "particle_color": ""
+                    },
+                    "projectile_effect": {
+                        "shape": "막대기",
+                        "count": 1,
+                        "color": "#4682B4"
+                    },
+                    "laser_effect": {
+                        "origin": "",
+                        "thickness": 1,
+                        "color": ""
+                    }
+                }
+            ]
+        },
+        {
+            "character_id": "",
+            "character_name": "방구석 폐인 - 김집돌",
+            "description": "세상과 단절된 채 집 안에서 자신만의 세계를 구축한 은둔형 캐릭터입니다. 의외의 지식과 비범한 생활 스킬로 상대를 제압합니다.",
+            "image_url": "/static/images/image_161b1327-b96c-42b1-a8b9-8b91a26121b1.png",
+            "stats": {
+                "hp": 100,
+                "atk": 60,
+                "def": 70,
+                "sp_atk": 120,
+                "sp_def": 80,
+                "speed": 70
+            },
+            "character_type": "현대형 은둔자",
+            "skills": [
+                {
+                    "skill_name": "택배 상자 폭격",
+                    "description": "쌓아둔 택배 상자들을 무작위로 던져 공격합니다.",
+                    "base_power": 75,
+                    "damage_type": "물리",
+                    "skill_type": "생활물품 투척",
+                    "visual_effect_type": 0,
+                    "shake_effect": {
+                        "particle_color": ""
+                    },
+                    "projectile_effect": {
+                        "shape": "구체",
+                        "count": 3,
+                        "color": "#8B4513"
+                    },
+                    "laser_effect": {
+                        "origin": "",
+                        "thickness": 1,
+                        "color": ""
+                    }
+                },
+                {
+                    "skill_name": "게임 오버 분노",
+                    "description": "게임 오버로 인한 극심한 분노가 폭발하여 주변을 흔듭니다.",
+                    "base_power": 90,
+                    "damage_type": "특수",
+                    "skill_type": "정신적 폭발",
+                    "visual_effect_type": 0,
+                    "shake_effect": {
+                        "particle_color": "#FF0000"
+                    },
+                    "projectile_effect": {
+                        "shape": "",
+                        "count": 0,
+                        "color": ""
+                    },
+                    "laser_effect": {
+                        "origin": "",
+                        "thickness": 1,
+                        "color": ""
+                    }
+                },
+                {
+                    "skill_name": "모니터 섬광",
+                    "description": "모니터에서 뿜어져 나오는 강렬한 빛으로 상대를 눈멀게 합니다.",
+                    "base_power": 80,
+                    "damage_type": "특수",
+                    "skill_type": "광선 방출",
+                    "visual_effect_type": 0,
+                    "shake_effect": {
+                        "particle_color": ""
+                    },
+                    "projectile_effect": {
+                        "shape": "",
+                        "count": 0,
+                        "color": ""
+                    },
+                    "laser_effect": {
+                        "origin": "Player",
+                        "thickness": 1,
+                        "color": "#00FFFF"
+                    }
+                },
+                {
+                    "skill_name": "라면 국물 방출",
+                    "description": "먹다 남은 라면 국물을 전방에 뿌려 적에게 불쾌감을 줍니다.",
+                    "base_power": 65,
+                    "damage_type": "특수",
+                    "skill_type": "생활 오물 투척",
+                    "visual_effect_type": 0,
+                    "shake_effect": {
+                        "particle_color": ""
+                    },
+                    "projectile_effect": {
+                        "shape": "막대기",
+                        "count": 1,
+                        "color": "#FFA500"
+                    },
+                    "laser_effect": {
+                        "origin": "",
+                        "thickness": 1,
+                        "color": ""
+                    }
+                }
+            ]
+        }
+    ]
+}

@@ -1678,6 +1678,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentRound: 0
+  selectedChara: 99
+  runId: 0
+  apiRequester: {fileID: 0}
+  characterSheet: {fileID: 0}
 --- !u!1 &1085904345
 GameObject:
   m_ObjectHideFlags: 0

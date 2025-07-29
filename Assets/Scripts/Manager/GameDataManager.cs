@@ -1,12 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using Newtonsoft.Json;
 
 public class EnemyListResponse
 {
-    public int runId;
-    public string enemiesJson;
+    public string runId;
+    public List<CharacterData> enemies;
 }
 public class TypeChartResponse
 {
@@ -18,8 +19,14 @@ public class TypeChartResponse
 public class CurrentCharacterStatus
 {
     public string charaName;
+    public string charaType;
     public int currentHp;
     public int maxHp;
+    public int tmpAtk;
+    public int tmpDef;
+    public int tmpSpAtk;
+    public int tmpSpDef;
+    public int tmpSpeed;
     public bool isAlive;
 }
 public class GameDataManager : MonoBehaviour
@@ -28,7 +35,7 @@ public class GameDataManager : MonoBehaviour
     public int currentRound = 1;
     public int selectedChara = 99;
     public List<CurrentCharacterStatus> charaStatus = null; 
-    public int runId;
+    public string runId;
     public Dictionary<string, Dictionary<string, float>> typeChart;
     public APIRequester apiRequester;
     public CharacterSheet characterSheet;
@@ -50,6 +57,7 @@ public class GameDataManager : MonoBehaviour
     {
         if (APIRequester.Instance != null)
             apiRequester = APIRequester.Instance;
+        currentRound = 1;
     }
 
     public void SetChampion(string response)
@@ -69,19 +77,20 @@ public class GameDataManager : MonoBehaviour
 
     public void GetEnemiesData()
     {
-        string json = CharacterSheet.Instance.ToJsonOfCharacters();
-        apiRequester.SendJsonRequest("/api/runs", "POST", json, null, (response) =>
+        string json = CharacterSheet.Instance.ToJsonOfCharacters("RunCreateRequest");
+        Debug.Log(json);
+        StartCoroutine(apiRequester.SendJsonRequest("/api/runs", "POST", json, null, (response) =>
         {
             Debug.Log("적 정보 받아옴!");
             var res = JsonConvert.DeserializeObject<EnemyListResponse>(response);
             runId = res.runId;
-            var charaList = CharacterSheet.Instance.ParseMultipleCharacterData(res.enemiesJson);
+            var charaList = res.enemies;
             CharacterSheet.Instance.enemies = charaList;
         }, (error) =>
         {
             Debug.Log("적 정보 받아오기 실패!");
             Debug.Log(error);
-        });
+        }));
     }
     public void UpdateCharacterStatus(List<CurrentCharacterStatus> newStatus = null)
     {
@@ -93,8 +102,14 @@ public class GameDataManager : MonoBehaviour
             {
                 CurrentCharacterStatus status = new CurrentCharacterStatus();
                 status.charaName = characters[i].character_name;
+                status.charaType = characters[i].character_type;
                 status.maxHp = characters[i].stats.hp + 100; // 체력 수치
                 status.currentHp = status.maxHp;
+                status.tmpAtk = characters[i].stats.atk;
+                status.tmpDef = characters[i].stats.def;
+                status.tmpSpAtk = characters[i].stats.sp_atk;
+                status.tmpSpDef = characters[i].stats.sp_def;
+                status.tmpSpeed = characters[i].stats.speed;
                 status.isAlive = true;
                 charaStatus.Add(status);
             }
@@ -128,6 +143,25 @@ public class GameDataManager : MonoBehaviour
             Debug.Log("상성표 받아오기 실패!");
             Debug.Log(error);
         });
+    }
+
+    public void SaveCharacters()
+    {
+        string path = Application.dataPath + "/characters.json";
+        string json = CharacterSheet.Instance.ToJsonOfCharacters();
+        File.WriteAllText(path, json);
+    }
+    public void LoadCharacters()
+    {
+        string path = Application.dataPath + "/characters.json";
+        if (!File.Exists(path))
+        {
+            Debug.LogWarning("캐릭터 파일이 없습니다: " + path);
+            return;
+        }
+        string json = File.ReadAllText(path);
+        var charaList = CharacterSheet.Instance.ParseMultipleCharacterData(json);
+        CharacterSheet.Instance.characters = charaList;
     }
 
     // Update is called once per frame

@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 8455851568274104550}
   - component: {fileID: 2807074148978404854}
   - component: {fileID: 6390055799695748423}
+  - component: {fileID: 1168225729982006467}
   m_Layer: 5
   m_Name: EnemyItemPrefab
   m_TagString: Untagged
@@ -78,6 +79,20 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &1168225729982006467
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5275114685233372822}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3245ec927659c4140ac4f8d17403cc18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_HorizontalFit: 0
+  m_VerticalFit: 2
 --- !u!1 &5688008380282037415
 GameObject:
   m_ObjectHideFlags: 0

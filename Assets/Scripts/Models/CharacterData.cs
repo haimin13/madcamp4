@@ -36,14 +36,6 @@ public class Stats // total 400, 50~150 per one
 
 // --- 스킬 관련 클래스 및 열거형 ---
 
-// 스킬의 시각적 연출이 어떤 타입인지 구분하기 위한 열거형(Enum)
-public enum VisualEffectType
-{
-    Shake,      // 캐릭터 흔들림 + 파티클
-    Projectile, // 투사체
-    Laser       // 레이저
-}
-
 // 각 스킬의 데이터를 담는 메인 클래스
 [System.Serializable]
 public class Skill
@@ -56,7 +48,7 @@ public class Skill
     public string skill_type; // 스킬의 고유 타입 (1개)
 
     // 연출 정보
-    public VisualEffectType visual_effect_type; // 이 스킬이 어떤 연출을 사용할지 결정
+    public string visual_effect_type; // 이 스킬이 어떤 연출을 사용할지 결정
 
     // 3가지 연출 타입별 데이터. 이 중 하나만 채워집니다.
     public ShakeEffect shake_effect;
@@ -89,6 +81,6 @@ public class LaserEffect
 {
     // 발사 위치 예: "Player", "TopToBottom", "BottomToTop"
     public string origin;
-    public string thickness; // 예: "얇음", "두꺼움"
+    public int thickness; // 예: "얇음", "두꺼움"
     public string color;
 }

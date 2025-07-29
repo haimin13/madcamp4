@@ -27,7 +27,13 @@ public class BattleSceneView : MonoBehaviour
     void OnSkillClicked(int btnIndex)
     {
         Debug.Log($"스킬 {btnIndex} 클릭!");
-        controller.UsePlayerSkill(btnIndex);
+        SetSkillButtonsInteractable(false);
+        controller.SelectSkill(btnIndex);
+    }
+    public void SetSkillButtonsInteractable(bool enable)
+    {
+        foreach (var btn in skillButtons)
+            btn.interactable = enable;
     }
     public void ShowSkills(List<Skill> skills)
     {
@@ -69,7 +75,7 @@ public class BattleSceneView : MonoBehaviour
     public void SetStatusPanel(CurrentCharacterStatus charaStatus, CurrentCharacterStatus enemyStatus)
     {
         UpdateStatusPanel(charaStatus, false);
-        UpdateStatusPanel(charaStatus, true);
+        UpdateStatusPanel(enemyStatus, true);
     }
 
     // Update is called once per frame

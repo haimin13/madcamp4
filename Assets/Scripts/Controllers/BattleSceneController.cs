@@ -18,45 +18,71 @@ public class BattleSceneController : MonoBehaviour
         view.SetStatusPanel(model.charaStatus[model.currentChara], model.enemyStatus);
     }
 
+    public void SelectSkill(int skillIdx)
+    {
+        if (model.charaStatus[model.currentChara].tmpSpeed >= model.enemyStatus.tmpSpeed)
+        {
+            UsePlayerSkill(skillIdx);
+            if (!model.isOver)
+                UseEnemySkill();
+        }
+        else
+        {
+            UseEnemySkill();
+            if (!model.isOver)
+                UsePlayerSkill(skillIdx);
+        }
+    }
     public void UsePlayerSkill(int skillIdx)
     {
         Skill castedSkill = model.charaSkills[skillIdx];
-        int damage = castedSkill.base_power;
 
-        // 데미지 계산식
+        // if 공격스킬
+        int atkStat = model.charaStatus[model.currentChara].tmpAtk;
+        int spAtkStat = model.charaStatus[model.currentChara].tmpSpAtk;
+        int defStat = model.enemyStatus.tmpDef;
+        int spDefStat = model.enemyStatus.tmpSpDef;
+        string defType = model.enemyStatus.charaType;
+
+        int damage = model.CalculateDamage(castedSkill, atkStat, spAtkStat, defStat, spDefStat, defType);
 
         model.enemyStatus.currentHp -= damage;
         // view.ShowSkillAnimation
+
         view.UpdateStatusPanel(status: model.enemyStatus, isEnemy: true);
-        if (IsBattleOver())
+        if (model.isOver)
         {
             // 서버에 결과 전송
             // 보상?
             // 씬 전환
         }
-        else
-        {
-            useEnemySkill();
-        }
     }
 
-    public void useEnemySkill()
+    public void UseEnemySkill()
     {
         // 랜덤하게 스킬 선택
-        // int damage = castedSkill.base_power;
-        // 데미지 계산
-        // 데미지 적용
-        // 애니메이션 출력
-        // status 패널 업데이트
-        // 게임종료 확인
-        // 턴전환
+        int idx = Random.Range(0, 4);
+        Skill castedSkill = model.enemySkills[idx];
 
-    }
-    public bool IsBattleOver()
-    {
-        // 한쪽이라도 끝났는지
-        // model.isWin = false;
-        return false;
+        // if 공격스킬
+        int atkStat = model.enemyStatus.tmpAtk;
+        int spAtkStat = model.enemyStatus.tmpSpAtk;
+        int defStat = model.charaStatus[model.currentChara].tmpDef;
+        int spDefStat = model.charaStatus[model.currentChara].tmpSpDef;
+        string defType = model.charaStatus[model.currentChara].charaType;
+
+        // 데미지 계산
+        int damage = model.CalculateDamage(castedSkill, atkStat, spAtkStat, defStat, spDefStat, defType);
+
+        // 데미지 적용
+        model.charaStatus[model.currentChara].currentHp -= damage;
+        // 애니메이션 출력
+        view.UpdateStatusPanel(status: model.charaStatus[model.currentChara], isEnemy: false);
+        // status 패널 업데이트
+        if (model.isOver)
+        {
+            
+        }
     }
 
     // Update is called once per frame

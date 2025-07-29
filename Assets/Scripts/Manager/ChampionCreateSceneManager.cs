@@ -31,6 +31,16 @@ public class ChampionCreateSceneManager : MonoBehaviour
         OnNextButtonClicked();
         storyPanel.SetActive(true);
         loadingPanel.SetActive(false);
+
+        bool DebugMode = true;
+
+        //Debug Mode
+        if (DebugMode)
+        {
+            GameDataManager.Instance.LoadCharacters();
+            OnStartButtonClicked();
+        }
+        
     }
 
     void OnOKButtonClicked()
@@ -102,8 +112,10 @@ public class ChampionCreateSceneManager : MonoBehaviour
     }
     void OnStartButtonClicked()
     {
+        Debug.Log("OnStartButtonClicked");
         if (GameDataManager.Instance != null)
         {
+            Debug.Log("GameDataManager.Instance != null");
             GameDataManager.Instance.GetEnemiesData();
             GameDataManager.Instance.UpdateCharacterStatus(null);
         }

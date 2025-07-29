@@ -34,6 +34,7 @@ public class StageListSceneManager : MonoBehaviour
 
     void CreateEnemyList()
     {
+        enemyList = CharacterSheet.Instance.enemies;
         int count = Mathf.Min(9, enemyList.Count);
 
         for (int i = 0; i < count; i++)
@@ -43,8 +44,8 @@ public class StageListSceneManager : MonoBehaviour
 
             // 구성요소 연결 (Image, Text 등)
             item.transform.Find("EnemyImagePreview").GetComponent<Image>().sprite = enemyList[i].character_sprite;
-            item.transform.Find("EnemyName").GetComponent<Text>().text = enemyList[i].character_name;
-            item.transform.Find("EnemyLevel").GetComponent<Text>().text = $"Round {i + 1}";
+            item.transform.Find("EnemyName").GetComponent<TextMeshProUGUI>().text = enemyList[i].character_name;
+            item.transform.Find("EnemyRound").GetComponent<TextMeshProUGUI>().text = $"Round {i + 1}";
 
             // 필요시 다른 초기화
             // if (i+1 == GameDataManager.Instance.currentRound)
@@ -58,7 +59,9 @@ public class StageListSceneManager : MonoBehaviour
     {
         if (CharacterSheet.Instance != null && GameDataManager.Instance != null)
         {
-            var chara = CharacterSheet.Instance.characters[GameDataManager.Instance.currentRound - 1];
+            Debug.Log(GameDataManager.Instance.currentRound);
+            Debug.Log(CharacterSheet.Instance.enemies.Count);
+            var chara = CharacterSheet.Instance.enemies[GameDataManager.Instance.currentRound - 1];
             // image 추가
             enemyName.text = chara.character_name;
             enemyDescription.text = chara.description;
@@ -68,7 +71,7 @@ public class StageListSceneManager : MonoBehaviour
     {
         if (CharacterSheet.Instance != null)
         {
-            var chara = CharacterSheet.Instance.characters[GameDataManager.Instance.currentRound - 1];
+            var chara = CharacterSheet.Instance.enemies[GameDataManager.Instance.currentRound - 1];
             // 스탯, 스킬 디테일 표시해주는 팝업 패널
         }
 
@@ -76,18 +79,20 @@ public class StageListSceneManager : MonoBehaviour
 
     void OnToggleChanged()
     {
+        Debug.Log("OnToggleChanged");
         var activeToggle = charaToggleGroup.ActiveToggles().FirstOrDefault();
         if (activeToggle != null)
         {
             int index = charaToggles.IndexOf(activeToggle);
             if (GameDataManager.Instance != null)
+                Debug.Log("GameDataManager.Instance.selectedChara = index");
                 GameDataManager.Instance.selectedChara = index;
         }
     }
 
     void StartBattle()
     {
-        
+
         if (GameDataManager.Instance != null)
         {
             int selected = GameDataManager.Instance.selectedChara;
@@ -100,10 +105,12 @@ public class StageListSceneManager : MonoBehaviour
                 Debug.Log("the character is dead!");
             }
             else
+            {
                 loadingPanel.SetActive(true);
                 GameDataManager.Instance.GetRoundInfo();
                 loadingPanel.SetActive(true);
                 SceneManager.LoadScene("BattleScene");
+            }
         }
     }
 }
