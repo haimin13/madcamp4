@@ -25,7 +25,7 @@ public class APIRequester : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        baseUrl = "http://localhost:8000";
+        baseUrl = "https://airouge.yyacht.camp";
     }
 
     // Update is called once per frame
