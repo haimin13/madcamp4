@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class BattleSceneController : MonoBehaviour
@@ -34,8 +35,16 @@ public class BattleSceneController : MonoBehaviour
             UseEnemySkill();
             if (!model.isOver)
             {
-                UsePlayerSkill(skillIdx);
-                view.SetSkillButtonsInteractable(true);
+                if (model.charaStatus[model.currentChara].isAlive)
+                {
+                    UsePlayerSkill(skillIdx);
+                    view.SetSkillButtonsInteractable(true);
+                }
+                else
+                {
+                    view.ShowSwitchPanel();
+                    view.SetSkillButtonsInteractable(true);
+                }
             }
         }
         // 내 캐릭 죽고 남은 캐릭 남아있는 경우 추가
@@ -54,7 +63,7 @@ public class BattleSceneController : MonoBehaviour
 
         int damage = model.CalculateDamage(castedSkill, atkStat, spAtkStat, defStat, spDefStat, defType);
 
-        // view.ShowSkillAnimation
+        // view.ShowSkillAnimation();
 
         model.enemyStatus.currentHp -= damage;
         view.UpdateStatusPanel(status: model.enemyStatus, isEnemy: true);
@@ -106,7 +115,39 @@ public class BattleSceneController : MonoBehaviour
         {
             model.isOver = true;
             model.isWin = true;
+            return;
         }
+        if (!model.charaStatus[model.currentChara].isAlive)
+        {
+            bool exists = model.charaStatus.Any(c => c.isAlive);
+            if (!exists)
+            {
+                model.isOver = true;
+                model.isWin = false;
+            }
+            else
+            {
+                // 스위치 패널 보여주기
+            }
+        }
+    }
+
+    public void ChangeCandidate(int idx)
+    {
+        model.candidate = idx;
+        view.ShowCandidate(CharacterSheet.Instance.characters[idx].skills);
+    }
+
+    public void SwitchCharacter()
+    {
+        if (model.candidate == 99)
+        {
+            Debug.Log("no candidate selected!");
+            return;
+        }
+        model.currentChara = model.candidate;
+        model.candidate = 99;
+        model.LoadCharaSkills();
     }
 
     // Update is called once per frame
