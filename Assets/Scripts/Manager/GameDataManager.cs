@@ -25,6 +25,8 @@ public class CurrentCharacterStatus
 {
     public string charaName;
     public string charaType;
+    public string debuff;
+    public int duration;
     public int currentHp;
     public int maxHp;
     public int tmpAtk;
@@ -109,6 +111,8 @@ public class GameDataManager : MonoBehaviour
                 CurrentCharacterStatus status = new CurrentCharacterStatus();
                 status.charaName = characters[i].character_name;
                 status.charaType = characters[i].character_type;
+                status.debuff = "normal";
+                status.duration = 0;
                 status.maxHp = characters[i].stats.hp + 100; // 체력 수치
                 status.currentHp = status.maxHp;
                 status.tmpAtk = characters[i].stats.atk;
@@ -163,7 +167,7 @@ public class GameDataManager : MonoBehaviour
             //onFail?.Invoke();
         }));
     }
-    
+
     private IEnumerator RetryGetRoundInfo(System.Action onComplete, System.Action onFail)
     {
         yield return new WaitForSeconds(1f);

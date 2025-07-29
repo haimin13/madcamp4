@@ -112,6 +112,28 @@ public class BattleSceneView : MonoBehaviour
     {
         switchPanel.SetActive(true);
         // 캐릭터 스테이터스 반영해서 캐릭터 표시
+        for (int i = 0; i < model.charaStatus.Count; i++)
+        {
+            var btn = charaButtons[i];
+            var chara = model.charaStatus[i];
+            var nameText = btn.transform.Find("CharaName").GetComponent<TextMeshProUGUI>();
+            if (nameText != null)
+                nameText.text = chara.charaName;
+            var charaSlider = btn.transform.Find("HPSlider").GetComponent<Slider>();
+            if (charaSlider != null)
+            {
+                charaSlider.maxValue = chara.maxHp;
+                charaSlider.value = chara.currentHp;
+
+                var fill = charaSlider.fillRect.GetComponent<Image>();
+                fill.enabled = chara.currentHp > 0;
+            }
+            var debuff = btn.transform.Find("DebuffText").GetComponent<TextMeshProUGUI>();
+            if (debuff != null)
+            {
+                if ()
+            }
+        }
         
     }
 
