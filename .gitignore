@@ -97,3 +97,16 @@ InitTestScene*.unity*
 
 # Auto-generated scenes by play mode tests
 /[Aa]ssets/[Ii]nit[Tt]est[Ss]cene*.unity*
+
+# Unity C# build artifacts
+/[Bb]in/
+/[Oo]bj/
+[Bb]in/
+obj.meta
+Debug.meta
+net10.0.meta
+*AssemblyInfo*
+*GeneratedMSB*
+.NETCoreApp*
+bin.meta
+ref.meta
