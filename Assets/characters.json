@@ -21,7 +21,7 @@
                     "base_power": 100,
                     "damage_type": "물리",
                     "skill_type": "정면 돌파",
-                    "visual_effect_type": "0",
+                    "visual_effect_type": "Shake",
                     "shake_effect": {
                         "particle_color": "#A0522D"
                     },
@@ -42,7 +42,7 @@
                     "base_power": 90,
                     "damage_type": "물리",
                     "skill_type": "원거리 사격",
-                    "visual_effect_type": "0",
+                    "visual_effect_type": "Projectile",
                     "shake_effect": {
                         "particle_color": ""
                     },
@@ -84,7 +84,7 @@
                     "base_power": 80,
                     "damage_type": "물리",
                     "skill_type": "돌진 기동",
-                    "visual_effect_type": "0",
+                    "visual_effect_type": "Shake",
                     "shake_effect": {
                         "particle_color": "#36454F"
                     },
@@ -122,7 +122,7 @@
                     "base_power": 90,
                     "damage_type": "특수",
                     "skill_type": "냉기 제어",
-                    "visual_effect_type": "0",
+                    "visual_effect_type": "Laser",
                     "shake_effect": {
                         "particle_color": ""
                     },
