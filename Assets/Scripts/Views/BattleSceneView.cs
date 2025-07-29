@@ -18,6 +18,7 @@ public class BattleSceneView : MonoBehaviour
     public Button switchPanelButton;
     public GameObject switchPanel;
     public List<Button> charaButtons;
+    public GameObject candidateSkillPanel;
     public Button switchButton;
     public Button cancelButton;
     public string first = " ";
@@ -111,6 +112,7 @@ public class BattleSceneView : MonoBehaviour
     {
         switchPanel.SetActive(true);
         // 캐릭터 스테이터스 반영해서 캐릭터 표시
+        
     }
 
     public void OnSwitchButtonClicked()
@@ -122,8 +124,27 @@ public class BattleSceneView : MonoBehaviour
     {
         controller.ChangeCandidate(idx);
     }
-    public void ShowCandidate(int idx)
+    public void ShowCandidate(List<Skill> skills)
     {
+        var candidateSkillButtons = new List<Button>(candidateSkillPanel.GetComponentsInChildren<Button>(true));
+        for (int i = 0; i < candidateSkillButtons.Count; i++)
+        {
+            Button btn = candidateSkillButtons[i];
+            var nameObj = btn.transform.Find("SkillNameText");
+            if (nameObj != null)
+            {
+                var nameText = nameObj.GetComponent<TextMeshProUGUI>();
+                if (nameText != null)
+                    nameText.text = skills[i].skill_name;
+            }
+            var typeObj = btn.transform.Find("SkillTypeText");
+            if (typeObj != null)
+            {
+                var typeText = typeObj.GetComponent<TextMeshProUGUI>();
+                if (typeText != null)
+                    typeText.text = skills[i].skill_type;
+            }
+        }
         
     }
     public void OnCancelButtonClicked()

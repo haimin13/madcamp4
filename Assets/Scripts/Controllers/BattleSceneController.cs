@@ -135,11 +135,18 @@ public class BattleSceneController : MonoBehaviour
     public void ChangeCandidate(int idx)
     {
         model.candidate = idx;
+        view.ShowCandidate(CharacterSheet.Instance.characters[idx].skills);
     }
 
     public void SwitchCharacter()
     {
+        if (model.candidate == 99)
+        {
+            Debug.Log("no candidate selected!");
+            return;
+        }
         model.currentChara = model.candidate;
+        model.candidate = 99;
         model.LoadCharaSkills();
     }
 
