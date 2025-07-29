@@ -39,7 +39,7 @@ public class CurrentCharacterStatus
 public class GameDataManager : MonoBehaviour
 {
     public static GameDataManager Instance { get; private set; }
-    public int currentRound = 1;
+    public int currentRound = 0;
     public int selectedChara = 99;
     public List<CurrentCharacterStatus> charaStatus = null; 
     public string runId;
@@ -64,7 +64,7 @@ public class GameDataManager : MonoBehaviour
     {
         if (APIRequester.Instance != null)
             apiRequester = APIRequester.Instance;
-        currentRound = 1;
+        currentRound = 0;
     }
 
     public void SetChampion(string response)

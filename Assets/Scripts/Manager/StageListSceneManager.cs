@@ -21,6 +21,7 @@ public class StageListSceneManager : MonoBehaviour
 
     void Start()
     {
+        GameDataManager.Instance.currentRound += 1;
         CreateEnemyList();
         ShowCurrentEnemy();
         enemyDetailButton.onClick.AddListener(ShowEnemyDetail);

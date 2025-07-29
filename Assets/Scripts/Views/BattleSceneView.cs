@@ -32,11 +32,19 @@ public class BattleSceneView : MonoBehaviour
             int idx = i;
             skillButtons[i].onClick.AddListener(() => OnSkillClicked(idx));
         }
-        SetLogtext();
+        SetLogtextAndWait(wait: 0f);
         switchPanelButton.onClick.AddListener(OnSwitchPanelButtonClicked);
         switchButton.onClick.AddListener(OnSwitchButtonClicked);
         cancelButton.onClick.AddListener(OnCancelButtonClicked);
-        charaButtons = new List<Button>(switchPanel.GetComponentsInChildren<Button>(true));
+        charaButtons = new List<Button>();
+        for (int i = 0; i < switchPanel.transform.childCount; i++)
+        {
+            Transform child = switchPanel.transform.GetChild(i);
+            Button btn = child.GetComponent<Button>();
+            if (btn != null)
+                charaButtons.Add(btn);
+        }
+
         for (int i = 0; i < charaButtons.Count; i++)
         {
             int idx = i;
@@ -98,11 +106,12 @@ public class BattleSceneView : MonoBehaviour
         UpdateStatusPanel(enemyStatus, true);
     }
 
-    public void SetLogtext(string sentence = " ")
+    public IEnumerator SetLogtextAndWait(string sentence = " ", float wait = 1.0f)
     {
         first = second;
         second = sentence;
         logText.text = first + "\n" + second;
+        yield return new WaitForSeconds(wait);
     }
     public void OnSwitchPanelButtonClicked()
     {
@@ -157,6 +166,7 @@ public class BattleSceneView : MonoBehaviour
 
     public void OnCharaClicked(int idx)
     {
+        Debug.Log("OnCharaClicked");
         controller.ChangeCandidate(idx);
     }
     public void ShowCandidate(List<Skill> skills)
@@ -186,7 +196,10 @@ public class BattleSceneView : MonoBehaviour
     public void OnCancelButtonClicked()
     {
         if (model.isDead)
+        {
+            Debug.Log("you have to change!");
             return;
+        }
         model.candidate = 99;
         switchPanel.SetActive(false);
     }

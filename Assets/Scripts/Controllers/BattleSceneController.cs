@@ -19,23 +19,27 @@ public class BattleSceneController : MonoBehaviour
         view.ShowSkills(model.charaSkills);
         view.SetStatusPanel(model.charaStatus[model.currentChara], model.enemyStatus);
     }
-
     public void SelectSkill(int skillIdx)
+    {
+        StartCoroutine(SelectSkillCoroutine(skillIdx));
+    }
+
+    private IEnumerator SelectSkillCoroutine(int skillIdx)
     {
         if (model.charaStatus[model.currentChara].tmpSpeed >= model.enemyStatus.tmpSpeed)
         {
-            UsePlayerSkill(skillIdx);
+            yield return StartCoroutine(UsePlayerSkillCoroutine(skillIdx));
             if (model.isOver)
             {
                 view.ShowGameOver(model.isWin);
-                return;
+                yield break;
             }
-                
-            UseEnemySkill();
+
+            yield return StartCoroutine(UseEnemySkillCoroutine());
             if (model.isOver)
             {
                 view.ShowGameOver(model.isWin);
-                return;
+                yield break;
             }
             if (!model.charaStatus[model.currentChara].isAlive)
                 view.ShowSwitchPanel();
@@ -43,30 +47,34 @@ public class BattleSceneController : MonoBehaviour
         }
         else
         {
-            UseEnemySkill();
+            yield return StartCoroutine(UseEnemySkillCoroutine());
             if (model.isOver)
             {
                 view.ShowGameOver(model.isWin);
-                return;
+                yield break;
             }
             if (!model.charaStatus[model.currentChara].isAlive)
             {
                 view.ShowSwitchPanel();
-                return;
+                yield break;
             }
-            UsePlayerSkill(skillIdx);
+            yield return StartCoroutine(UsePlayerSkillCoroutine(skillIdx));
             if (model.isOver)
             {
                 view.ShowGameOver(model.isWin);
-                return;
+                yield break;
             }
             else view.SetSkillButtonsInteractable(true);
         }
     }
     public void UsePlayerSkill(int skillIdx)
     {
+        StartCoroutine(UsePlayerSkillCoroutine(skillIdx));
+    }
+    private IEnumerator UsePlayerSkillCoroutine(int skillIdx)
+    {
         Skill castedSkill = model.charaSkills[skillIdx];
-        view.SetLogtext($"{model.charaStatus[model.currentChara].charaName}은(는) {castedSkill.skill_name}을(를) 사용했다!");
+        yield return view.SetLogtextAndWait($"{model.charaStatus[model.currentChara].charaName}은(는) {castedSkill.skill_name}을(를) 사용했다!");
 
         // if 공격스킬
         int atkStat = model.charaStatus[model.currentChara].tmpAtk;
@@ -81,22 +89,26 @@ public class BattleSceneController : MonoBehaviour
 
         model.enemyStatus.currentHp -= damage;
         view.UpdateStatusPanel(status: model.enemyStatus, isEnemy: true);
-        view.SetLogtext($"{model.enemyStatus.charaName}에게 {damage}의 데미지!");
+        yield return view.SetLogtextAndWait($"{model.enemyStatus.charaName}에게 {damage}의 데미지!");
         if (model.enemyStatus.currentHp <= 0)
         {
             model.enemyStatus.currentHp = 0;
             model.enemyStatus.isAlive = false;
-            view.SetLogtext($"{model.enemyStatus.charaName}은(는) 쓰러졌다!");
+            yield return view.SetLogtextAndWait($"{model.enemyStatus.charaName}은(는) 쓰러졌다!");
             CheckGameState();
         }
     }
-
     public void UseEnemySkill()
+    {
+        StartCoroutine(UseEnemySkillCoroutine());
+    }
+
+    private IEnumerator UseEnemySkillCoroutine()
     {
         // 랜덤하게 스킬 선택
         int idx = Random.Range(0, 4);
         Skill castedSkill = model.enemySkills[idx];
-        view.SetLogtext($"{model.enemyStatus.charaName}은(는) {castedSkill.skill_name}을(를) 사용했다!");
+        yield return view.SetLogtextAndWait($"{model.enemyStatus.charaName}은(는) {castedSkill.skill_name}을(를) 사용했다!");
 
         // if 공격스킬
         int atkStat = model.enemyStatus.tmpAtk;
@@ -112,13 +124,13 @@ public class BattleSceneController : MonoBehaviour
 
         model.charaStatus[model.currentChara].currentHp -= damage;
         view.UpdateStatusPanel(status: model.charaStatus[model.currentChara], isEnemy: false);
-        view.SetLogtext($"{model.charaStatus[model.currentChara].charaName}에게 {damage}의 데미지!");
+        yield return view.SetLogtextAndWait($"{model.charaStatus[model.currentChara].charaName}에게 {damage}의 데미지!");
 
         if (model.charaStatus[model.currentChara].currentHp <= 0)
         {
             model.charaStatus[model.currentChara].currentHp = 0;
             model.charaStatus[model.currentChara].isAlive = false;
-            view.SetLogtext($"{model.charaStatus[model.currentChara].charaName}은(는) 쓰러졌다!");
+            yield return view.SetLogtextAndWait($"{model.charaStatus[model.currentChara].charaName}은(는) 쓰러졌다!");
             model.isDead = true;
             CheckGameState();
         }
@@ -146,44 +158,68 @@ public class BattleSceneController : MonoBehaviour
 
     public void ChangeCandidate(int idx)
     {
+        Debug.Log($"ChangeCandidate idx: {idx}");
         model.candidate = idx;
         view.ShowCandidate(CharacterSheet.Instance.characters[idx].skills);
     }
 
     public void SwitchCharacter()
     {
+        StartCoroutine(SwitchCharacterCoroutine());
+    }
+    private IEnumerator SwitchCharacterCoroutine()
+    {
         if (model.candidate == 99)
         {
             Debug.Log("no candidate selected!");
-            return;
+            yield break;
         }
         if (!model.charaStatus[model.candidate].isAlive)
         {
             Debug.Log("It is DEAD!");
-            return;
+            yield break;
         }
+        if (model.currentChara == model.candidate)
+        {
+            Debug.Log("It's same!");
+            yield break;
+        }
+
+        string prevChara = model.charaStatus[model.currentChara].charaName;
+        string nextChara = model.charaStatus[model.candidate].charaName;
         model.currentChara = model.candidate;
         model.candidate = 99;
         model.LoadCharaSkills();
+        view.ShowSkills(model.charaSkills);
+        view.UpdateStatusPanel(model.charaStatus[model.currentChara], false);
+
+        view.switchPanel.SetActive(false);
+
+        yield return view.SetLogtextAndWait($"{prevChara} → {nextChara}로 교체했다!", 1.0f);
+
         if (!model.isDead) // 안죽었는데 교체로 턴 사용 -> 교체 후 상대 공격
         {
-            UseEnemySkill();
+            yield return StartCoroutine(UseEnemySkillCoroutine());
             if (model.isOver)
             {
-                view.OnCancelButtonClicked();
                 view.ShowGameOver(model.isWin);
-                return;
+                yield break;
             }
             if (!model.charaStatus[model.currentChara].isAlive)
             {
                 view.ShowSwitchPanel();
-                return;
+                yield break;
             }
+            view.OnCancelButtonClicked();
+            view.SetSkillButtonsInteractable(true);   // 교체+적턴 끝나고 버튼 살리기
+            yield break;
         }
         else
         {
             model.isDead = false;
             view.OnCancelButtonClicked();
+            view.SetSkillButtonsInteractable(true);
+            yield break;
         }
     }
 
