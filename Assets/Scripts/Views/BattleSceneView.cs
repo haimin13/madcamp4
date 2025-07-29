@@ -131,7 +131,7 @@ public class BattleSceneView : MonoBehaviour
             var debuff = btn.transform.Find("DebuffText").GetComponent<TextMeshProUGUI>();
             if (debuff != null)
             {
-                if ()
+                
             }
         }
         
