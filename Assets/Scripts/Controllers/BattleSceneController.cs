@@ -24,18 +24,26 @@ public class BattleSceneController : MonoBehaviour
         {
             UsePlayerSkill(skillIdx);
             if (!model.isOver)
+            {
                 UseEnemySkill();
+                view.SetSkillButtonsInteractable(true);
+            }
         }
         else
         {
             UseEnemySkill();
             if (!model.isOver)
+            {
                 UsePlayerSkill(skillIdx);
+                view.SetSkillButtonsInteractable(true);
+            }
         }
+        // 내 캐릭 죽고 남은 캐릭 남아있는 경우 추가
     }
     public void UsePlayerSkill(int skillIdx)
     {
         Skill castedSkill = model.charaSkills[skillIdx];
+        view.SetLogtext($"{model.charaStatus[model.currentChara].charaName}은(는) {castedSkill.skill_name}을(를) 사용했다!");
 
         // if 공격스킬
         int atkStat = model.charaStatus[model.currentChara].tmpAtk;
@@ -46,15 +54,17 @@ public class BattleSceneController : MonoBehaviour
 
         int damage = model.CalculateDamage(castedSkill, atkStat, spAtkStat, defStat, spDefStat, defType);
 
-        model.enemyStatus.currentHp -= damage;
         // view.ShowSkillAnimation
 
+        model.enemyStatus.currentHp -= damage;
         view.UpdateStatusPanel(status: model.enemyStatus, isEnemy: true);
-        if (model.isOver)
+        view.SetLogtext($"{model.enemyStatus.charaName}에게 {damage}의 데미지!");
+        if (model.enemyStatus.currentHp <= 0)
         {
-            // 서버에 결과 전송
-            // 보상?
-            // 씬 전환
+            model.enemyStatus.currentHp = 0;
+            model.enemyStatus.isAlive = false;
+            view.SetLogtext($"{model.enemyStatus.charaName}은(는) 쓰러졌다!");
+            CheckGameState();
         }
     }
 
@@ -63,6 +73,7 @@ public class BattleSceneController : MonoBehaviour
         // 랜덤하게 스킬 선택
         int idx = Random.Range(0, 4);
         Skill castedSkill = model.enemySkills[idx];
+        view.SetLogtext($"{model.enemyStatus.charaName}은(는) {castedSkill.skill_name}을(를) 사용했다!");
 
         // if 공격스킬
         int atkStat = model.enemyStatus.tmpAtk;
@@ -71,17 +82,30 @@ public class BattleSceneController : MonoBehaviour
         int spDefStat = model.charaStatus[model.currentChara].tmpSpDef;
         string defType = model.charaStatus[model.currentChara].charaType;
 
-        // 데미지 계산
         int damage = model.CalculateDamage(castedSkill, atkStat, spAtkStat, defStat, spDefStat, defType);
 
-        // 데미지 적용
-        model.charaStatus[model.currentChara].currentHp -= damage;
         // 애니메이션 출력
+        // view.ShowSkillAnimation();
+
+        model.charaStatus[model.currentChara].currentHp -= damage;
         view.UpdateStatusPanel(status: model.charaStatus[model.currentChara], isEnemy: false);
-        // status 패널 업데이트
-        if (model.isOver)
+        view.SetLogtext($"{model.charaStatus[model.currentChara].charaName}에게 {damage}의 데미지!");
+
+        if (model.charaStatus[model.currentChara].currentHp <= 0)
         {
-            
+            model.charaStatus[model.currentChara].currentHp = 0;
+            model.charaStatus[model.currentChara].isAlive = false;
+            view.SetLogtext($"{model.charaStatus[model.currentChara].charaName}은(는) 쓰러졌다!");
+            CheckGameState();
+        }
+    }
+
+    public void CheckGameState()
+    {
+        if (!model.enemyStatus.isAlive)
+        {
+            model.isOver = true;
+            model.isWin = true;
         }
     }
 

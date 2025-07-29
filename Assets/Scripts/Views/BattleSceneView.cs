@@ -13,6 +13,9 @@ public class BattleSceneView : MonoBehaviour
     public GameObject charaStatus;
     public GameObject enemyStatus;
     public BattleSceneController controller;
+    public TextMeshProUGUI logText;
+    public string first = " ";
+    public string second = " ";
     // Start is called before the first frame update
     void Start()
     {
@@ -22,6 +25,7 @@ public class BattleSceneView : MonoBehaviour
             int idx = i;
             skillButtons[i].onClick.AddListener(() => OnSkillClicked(idx));
         }
+        SetLogtext();
     }
 
     void OnSkillClicked(int btnIndex)
@@ -76,6 +80,13 @@ public class BattleSceneView : MonoBehaviour
     {
         UpdateStatusPanel(charaStatus, false);
         UpdateStatusPanel(enemyStatus, true);
+    }
+
+    public void SetLogtext(string sentence = " ")
+    {
+        first = second;
+        second = sentence;
+        logText.text = first + "\n" + second;
     }
 
     // Update is called once per frame
