@@ -10,7 +10,7 @@ public class BattleSceneController : MonoBehaviour
     public APIRequester apiRequester;
     public PlayerManager player;
     public PlayerManager enemy;
-    
+
     // Start is called before the first frame update
     void Start()
     {
@@ -153,6 +153,7 @@ public class BattleSceneController : MonoBehaviour
         {
             model.charaStatus[model.currentChara].currentHp = 0;
             model.charaStatus[model.currentChara].isAlive = false;
+            StartCoroutine(player.CharacterDeadAnimation());
             yield return view.SetLogtextAndWait($"{model.charaStatus[model.currentChara].charaName}은(는) 쓰러졌다!");
             model.isDead = true;
             CheckGameState();
@@ -207,17 +208,18 @@ public class BattleSceneController : MonoBehaviour
             Debug.Log("It's same!");
             yield break;
         }
+        yield return StartCoroutine(player.CharacterChangeCoroutine(model.charaStatus[model.candidate].charaImageUrl));
 
         string prevChara = model.charaStatus[model.currentChara].charaName;
         string nextChara = model.charaStatus[model.candidate].charaName;
         model.currentChara = model.candidate;
         model.candidate = 99;
         model.LoadCharaSkills();
-        player.setImage(model.charaStatus[model.currentChara].charaImageUrl);
         view.ShowSkills(model.charaSkills);
         view.UpdateStatusPanel(model.charaStatus[model.currentChara], false);
 
         view.switchPanel.SetActive(false);
+        view.SetSkillButtonsInteractable(false); // 스킬 버튼 비활성화
 
         yield return view.SetLogtextAndWait($"{prevChara} → {nextChara}로 교체했다!", 1.0f);
 
@@ -245,11 +247,5 @@ public class BattleSceneController : MonoBehaviour
             view.SetSkillButtonsInteractable(true);
             yield break;
         }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }

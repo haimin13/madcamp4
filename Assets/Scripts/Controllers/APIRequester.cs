@@ -144,7 +144,7 @@ public class APIRequester : MonoBehaviour
             byte[] fileData = File.ReadAllBytes(localPath);
             Texture2D texture = new Texture2D(2, 2);
             texture.LoadImage(fileData);
-            Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+            Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0f));
             onComplete?.Invoke(sprite);
         }
         else
@@ -159,7 +159,7 @@ public class APIRequester : MonoBehaviour
                     byte[] pngData = texture.EncodeToPNG();
                     File.WriteAllBytes(localPath, pngData);
 
-                    Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+                    Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0f));
                     onComplete?.Invoke(sprite);
                 }
                 else
