@@ -79,7 +79,7 @@ public class PlayerManager : MonoBehaviour
     /// </summary>
     public void PlayHitAnimation()
     {
-        StartCoroutine(BlinkRedCoroutine(3, 0.5f));
+        StartCoroutine(BlinkCoroutine(Color.red, 3, 0.5f));
     }
 
     // --- 각 효과별 코루틴 ---
@@ -270,19 +270,47 @@ public class PlayerManager : MonoBehaviour
         effectMaterial.SetFloat("_Alpha", 0f);
     }
 
-    private IEnumerator BlinkRedCoroutine(int blinkCount, float totalDuration)
+    /// <summary>
+    /// 셰이더의 _FlashAmount 값을 조절하여 점멸 효과를 만드는 코루틴입니다.
+    /// </summary>
+    private IEnumerator BlinkCoroutine(Color flashColor, int blinkCount, float totalDuration)
     {
-        Color originalColor = characterSprite.color;
-        Color hitColor = Color.red;
-        float blinkDuration = totalDuration / (blinkCount * 2);
+        if (effectMaterial == null)
+        {
+            Debug.LogError("효과를 적용할 머티리얼이 없습니다!");
+            yield break; // 코루틴을 즉시 종료합니다.
+        }
+
+        // 1. C# 스크립트에서 셰이더의 _FlashColor 값을 원하는 색으로 설정합니다.
+        effectMaterial.SetColor("_FlashColor", flashColor);
+
+        float singleBlinkDuration = totalDuration / blinkCount;
 
         for (int i = 0; i < blinkCount; i++)
         {
-            characterSprite.color = hitColor;
-            yield return new WaitForSeconds(blinkDuration);
-            characterSprite.color = originalColor;
-            yield return new WaitForSeconds(blinkDuration);
+            float elapsedTime = 0f;
+            // 부드럽게 밝아지는 효과
+            while (elapsedTime < singleBlinkDuration / 2)
+            {
+                float progress = elapsedTime / (singleBlinkDuration / 2);
+                effectMaterial.SetFloat("_FlashAmount", Mathf.Lerp(0f, 0.8f, progress));
+                elapsedTime += Time.deltaTime;
+                yield return null;
+            }
+
+            elapsedTime = 0f;
+            // 부드럽게 어두워지는 효과
+            while (elapsedTime < singleBlinkDuration / 2)
+            {
+                float progress = elapsedTime / (singleBlinkDuration / 2);
+                effectMaterial.SetFloat("_FlashAmount", Mathf.Lerp(0.8f, 0f, progress));
+                elapsedTime += Time.deltaTime;
+                yield return null;
+            }
         }
+
+        // 애니메이션이 끝난 후, 확실하게 효과를 끕니다.
+        effectMaterial.SetFloat("_FlashAmount", 0.0f);
     }
     public IEnumerator CharacterChangeCoroutine(string newSpriteUrl)
     {
