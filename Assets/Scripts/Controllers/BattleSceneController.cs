@@ -15,13 +15,13 @@ public class BattleSceneController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        bool debug = true;
+        bool debug = false;
         if (debug)
         {
             GameDataManager.Instance.currentRound = 1;
             Debug.Log(GameDataManager.Instance.currentRound);
             GameDataManager.Instance.selectedChara = 0;
-            GameDataManager.Instance.runId = "run_2b42a1c3-12c3-4f74-8be3-2d38801cd931";
+            GameDataManager.Instance.runId = "run_a85f192c-c763-4f1c-a0ce-234c6a430f3d";
 
             // save
             // GameDataManager.Instance.SaveCharacters();
@@ -256,6 +256,11 @@ public class BattleSceneController : MonoBehaviour
     public void GoNextRound()
     {
         model.StoreCurrentState();
-        SceneManager.LoadScene("StageListScene");
+        if (GameDataManager.Instance.currentRound != 9)
+            SceneManager.LoadScene("StageListScene");
+        else // 게임 클리어.
+        {
+            SceneManager.LoadScene("ClearScene");
+        }
     }
 }

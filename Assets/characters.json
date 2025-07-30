@@ -6,12 +6,12 @@
             "description": "거대한 몸에서 뿜어져 나오는 압도적인 힘으로 적을 제압하는 기린 전사입니다.",
             "image_url": "/static/images/image_bd802f7f-8ca1-4f6b-a449-774143c52d17.png",
             "stats": {
-                "hp": 90,
-                "atk": 120,
-                "def": 80,
-                "sp_atk": 100,
-                "sp_def": 60,
-                "speed": 50
+                "hp": 9000,
+                "atk": 120000,
+                "def": 800,
+                "sp_atk": 10000,
+                "sp_def": 6000,
+                "speed": 500
             },
             "character_type": "천둥 발굽",
             "skills": [
