@@ -13,24 +13,25 @@ public class StageListSceneManager : MonoBehaviour
     public Image enemyImage;
     public TextMeshProUGUI enemyName;
     public TextMeshProUGUI enemyDescription;
-    public Button enemyDetailButton;
     public ToggleGroup charaToggleGroup;
     public List<Toggle> charaToggles;
     public Button startButton;
     public GameObject loadingPanel;
+    public GameObject detailPanel;
+    public TextMeshProUGUI detailText;
+    public Button detailButton;
+    public Button closeButton;
 
     void Start()
     {
         GameDataManager.Instance.currentRound += 1;
         CreateEnemyList();
         ShowCurrentEnemy();
-        enemyDetailButton.onClick.AddListener(ShowEnemyDetail);
-        charaToggles = charaToggleGroup.GetComponentsInChildren<Toggle>().ToList();
-        foreach (var tog in charaToggles)
-        {
-            tog.onValueChanged.AddListener((_) => OnToggleChanged());
-        }
+        SetToggles();
+        detailPanel.SetActive(false);
+        detailButton.onClick.AddListener(ShowDetail);
         startButton.onClick.AddListener(StartBattle);
+        closeButton.onClick.AddListener(ClosePanel);
     }
 
     void CreateEnemyList()
@@ -54,12 +55,27 @@ public class StageListSceneManager : MonoBehaviour
             });
             item.transform.Find("EnemyName").GetComponent<TextMeshProUGUI>().text = enemyList[i].character_name;
             item.transform.Find("EnemyRound").GetComponent<TextMeshProUGUI>().text = $"Round {i + 1}";
-
+            
+            var le = item.GetComponent<LayoutElement>();
+            if (le == null)
+                le = item.AddComponent<LayoutElement>();
+            le.flexibleHeight = 1;
             // 필요시 다른 초기화
             // if (i+1 == GameDataManager.Instance.currentRound)
             // {
             //     // 테두리에 효과 넣기
             // }
+        }
+    }
+    void SetToggles()
+    {
+        charaToggles = charaToggleGroup.GetComponentsInChildren<Toggle>().ToList();
+        for (int i = 0; i < charaToggles.Count; i++)
+        {
+            Toggle tog = charaToggles[i];
+            tog.onValueChanged.AddListener((_) => OnToggleChanged());
+            var charaName = tog.GetComponentInChildren<TextMeshProUGUI>();
+            charaName.text = CharacterSheet.Instance.characters[i].character_name;
         }
     }
 
@@ -83,12 +99,14 @@ public class StageListSceneManager : MonoBehaviour
             enemyDescription.text = chara.description;
         }
     }
-    void ShowEnemyDetail()
+    void ShowDetail()
     {
+        detailPanel.SetActive(true);
         if (CharacterSheet.Instance != null)
         {
             var chara = CharacterSheet.Instance.enemies[GameDataManager.Instance.currentRound - 1];
-            // 스탯, 스킬 디테일 표시해주는 팝업 패널
+            string desc = GameDataManager.Instance.GetCharaDescription(chara);
+            detailText.text = desc;
         }
 
     }
@@ -104,6 +122,11 @@ public class StageListSceneManager : MonoBehaviour
                 Debug.Log("GameDataManager.Instance.selectedChara = index");
             GameDataManager.Instance.selectedChara = index;
         }
+    }
+
+    void ClosePanel()
+    {
+        detailPanel.SetActive(false);
     }
 
     void StartBattle()
