@@ -4,16 +4,20 @@ using UnityEngine;
 
 public class PlayerManager : MonoBehaviour
 {
-    public GameObject playerImage;
+    public GameObject player;
     public Transform target;
     public GameObject projectilePrefab;
     public GameObject laserPrefab;
     public bool isEnemy = false;
     private Vector3 originalPosition;
     private SpriteRenderer characterSprite;
+    void Start()
+    {
+        originalPosition = player.transform.position;
+    }
     public void setImage(string spriteurl)
     {
-        characterSprite = playerImage.GetComponent<SpriteRenderer>();
+        characterSprite = player.GetComponent<SpriteRenderer>();
         // Assuming you have a method to set the player's image
         // This is a placeholder for the actual implementation
         Debug.Log("Setting player image: " + spriteurl);
@@ -21,7 +25,7 @@ public class PlayerManager : MonoBehaviour
         {
             characterSprite.sprite = sprite;
         });
-        originalPosition = playerImage.transform.position;
+        player.transform.localScale = new Vector3(1f, 1f, 1f); // 초기 스케일로 설정
     }
     /// <summary>
     /// 스킬 데이터에 따라 적절한 애니메이션 코루틴을 실행합니다.
@@ -60,7 +64,7 @@ public class PlayerManager : MonoBehaviour
     private IEnumerator ShakeCoroutine(ShakeEffect effectData)
     {
         Debug.Log($"Shake 애니메이션 재생: 파티클 색상 {effectData.particle_color}");
-        
+
         float duration = 0.5f;
         float magnitude = 0.1f;
         float elapsed = 0.0f;
@@ -69,13 +73,13 @@ public class PlayerManager : MonoBehaviour
         {
             float x = UnityEngine.Random.Range(-1f, 1f) * magnitude;
             float y = UnityEngine.Random.Range(-1f, 1f) * magnitude;
-            playerImage.transform.position = originalPosition + new Vector3(x, y, 0);
+            player.transform.position = originalPosition + new Vector3(x, y, 0);
             elapsed += Time.deltaTime;
             yield return null;
         }
-        transform.position = originalPosition;
+        player.transform.position = originalPosition;
     }
-private IEnumerator ProjectileCoroutine(ProjectileEffect effectData)
+    private IEnumerator ProjectileCoroutine(ProjectileEffect effectData)
     {
         if (projectilePrefab == null || target == null)
         {
@@ -89,10 +93,10 @@ private IEnumerator ProjectileCoroutine(ProjectileEffect effectData)
         {
             // 캐릭터 주변에 약간의 랜덤한 오프셋을 주어 투사체를 생성합니다.
             Vector3 spawnOffset = (Vector3)UnityEngine.Random.insideUnitCircle * 0.5f;
-            Vector3 spawnPosition = transform.position + spawnOffset;
+            Vector3 spawnPosition = player.transform.position + spawnOffset;
 
             GameObject projectileGO = Instantiate(projectilePrefab, spawnPosition, Quaternion.identity);
-            
+
             // 투사체 색상 설정 (선택 사항)
             var projectileRenderer = projectileGO.GetComponent<SpriteRenderer>();
             if (projectileRenderer != null && ColorUtility.TryParseHtmlString(effectData.color, out Color projectileColor))
@@ -168,7 +172,7 @@ private IEnumerator ProjectileCoroutine(ProjectileEffect effectData)
 
         lineRenderer.startWidth = thickness;
         lineRenderer.endWidth = thickness;
-        
+
         if (ColorUtility.TryParseHtmlString(effectData.color, out Color laserColor))
         {
             lineRenderer.startColor = laserColor;
@@ -227,5 +231,58 @@ private IEnumerator ProjectileCoroutine(ProjectileEffect effectData)
             characterSprite.color = originalColor;
             yield return new WaitForSeconds(blinkDuration);
         }
+    }
+    public IEnumerator CharacterChangeCoroutine(string newSpriteUrl)
+    {
+        // --- 1. 왼쪽으로 사라지는 애니메이션 ---
+        float moveDuration = 0.2f; // 이동에 걸리는 시간
+        float changeDuration = 0.3f;
+        float elapsedTime = 0f;
+
+        // 화면 왼쪽 밖의 목표 지점을 계산합니다.
+        Vector3 offScreenPosition = originalPosition + Vector3.left * 6f;
+        if (player.transform.localScale.y == 0)
+        { 
+            elapsedTime = moveDuration; // 이미 사라진 상태라면 바로 이동
+        }
+
+        while (elapsedTime < moveDuration)
+        {
+            // Lerp를 사용해 부드럽게 이동
+            player.transform.position = Vector3.Lerp(originalPosition, offScreenPosition, elapsedTime / moveDuration);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+        // 정확한 위치에 고정
+        player.transform.position = offScreenPosition;
+        // --- 2. 캐릭터 이미지 교체 ---
+        setImage(newSpriteUrl);
+        yield return new WaitForSeconds(changeDuration); // 이미지 변경 후 잠시 대기
+        // --- 3. 다시 제자리로 돌아오는 애니메이션 ---
+        elapsedTime = 0f;
+        while (elapsedTime < moveDuration)
+        {
+            player.transform.position = Vector3.Lerp(offScreenPosition, originalPosition, elapsedTime / moveDuration);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+        // 정확한 위치에 고정
+        player.transform.position = originalPosition;
+        yield return null;
+    }
+    public IEnumerator CharacterDeadAnimation()
+    {
+        // --- 1. 캐릭터가 사라지는 애니메이션 ---
+        float squashDuration = 0.2f; // 페이드 아웃에 걸리는 시간
+        float elapsedTime = 0f;
+
+        while (elapsedTime < squashDuration)
+        {
+            float y = Mathf.Lerp(1f, 0, elapsedTime / squashDuration);
+            player.transform.localScale = new Vector3(1f, y, 1f); // Y축을 줄여서 사라지는 효과
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+        player.transform.localScale = new Vector3(1f, 0, 1f); // 최종적으로 Y축을 0으로 설정
     }
 }

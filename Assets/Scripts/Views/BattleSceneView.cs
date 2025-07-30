@@ -248,6 +248,7 @@ public class BattleSceneView : MonoBehaviour
     }
     public void restartGame()
     {
+        // TODO 케릭터 만들어진거 삭제하는 코드 만들기
         SceneManager.LoadScene("ChampCreateScene");
     }
 }
