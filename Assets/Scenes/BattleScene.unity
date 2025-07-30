@@ -1515,7 +1515,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 25.95
+  m_fontSize: 24.25
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -1651,7 +1651,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 25.5
+  m_fontSize: 23.7
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -1736,6 +1736,8 @@ MonoBehaviour:
   projectilePrefab: {fileID: 1923272548001261750, guid: a7477251c12bf08429a4cba3e8e88767, type: 3}
   laserPrefab: {fileID: 6651059081488997177, guid: 9c3df02ef2622b146a384f1d67ed67c7, type: 3}
   isEnemy: 1
+  statUpColor: {r: 1, g: 0, b: 0, a: 1}
+  statDownColor: {r: 0, g: 0, b: 1, a: 1}
 --- !u!114 &738614992
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1760,7 +1762,7 @@ Transform:
   m_GameObject: {fileID: 738614990}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4.4444447, y: 3, z: 10}
+  m_LocalPosition: {x: 4.447236, y: 3, z: 10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2192,7 +2194,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 235f7f43b73733c4eb6a536d2f79e491, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2582,7 +2584,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 780972341
   m_SortingLayer: 1
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 0.5764706}
   m_FlipX: 0
@@ -3569,7 +3571,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 235f7f43b73733c4eb6a536d2f79e491, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -4117,7 +4119,7 @@ Transform:
   m_GameObject: {fileID: 2003939422}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -4.4444447, y: 0.79999983, z: 10}
+  m_LocalPosition: {x: -4.447236, y: 0.79999983, z: 10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -4142,6 +4144,8 @@ MonoBehaviour:
   projectilePrefab: {fileID: 1923272548001261750, guid: a7477251c12bf08429a4cba3e8e88767, type: 3}
   laserPrefab: {fileID: 6651059081488997177, guid: 9c3df02ef2622b146a384f1d67ed67c7, type: 3}
   isEnemy: 0
+  statUpColor: {r: 1, g: 0, b: 0, a: 1}
+  statDownColor: {r: 0, g: 0, b: 1, a: 1}
 --- !u!1 &2045874694
 GameObject:
   m_ObjectHideFlags: 0
@@ -4539,7 +4543,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 780972341
   m_SortingLayer: 1
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 0.5764706}
   m_FlipX: 0
