@@ -15,7 +15,7 @@ public class BattleSceneController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        bool debug = false;
+        bool debug = true;
         if (debug)
         {
             GameDataManager.Instance.currentRound = 1;

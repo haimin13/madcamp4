@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 
 public class PlayerManager : MonoBehaviour
@@ -9,8 +10,11 @@ public class PlayerManager : MonoBehaviour
     public GameObject projectilePrefab;
     public GameObject laserPrefab;
     public bool isEnemy = false;
+    public Color statUpColor = Color.red;
+    public Color statDownColor = Color.blue;
     private Vector3 originalPosition;
     private SpriteRenderer characterSprite;
+    private Material effectMaterial;
     void Start()
     {
         originalPosition = player.transform.position;
@@ -18,6 +22,8 @@ public class PlayerManager : MonoBehaviour
     public void setImage(string spriteurl)
     {
         characterSprite = player.GetComponent<SpriteRenderer>();
+        effectMaterial = characterSprite.material;
+        effectMaterial.SetFloat("_Alpha", 0f);
         // Assuming you have a method to set the player's image
         // This is a placeholder for the actual implementation
         Debug.Log("Setting player image: " + spriteurl);
@@ -32,21 +38,38 @@ public class PlayerManager : MonoBehaviour
     /// </summary>
     public void PlaySkillAnimation(Skill skill)
     {
-        Debug.Log($"스킬 애니메이션 재생: {skill.skill_name}, 타입: {skill.visual_effect_type}");
+        Debug.Log($"스킬 애니메이션 재생: {skill.skill_name}, 타입: {skill.visual_effect_type}, 공격종류: {skill.damage_type}");
         // 스킬의 시각 효과 타입에 따라 다른 코루틴을 호출합니다.
-        switch (skill.visual_effect_type)
+        switch (skill.damage_type)
         {
-            case "Shake":
-                // Shake 효과에 필요한 데이터를 넘겨줍니다.
-                StartCoroutine(ShakeCoroutine(skill.shake_effect));
+            case "랭크":
+                StartCoroutine(RankCoroutine(true));
                 break;
-            case "Projectile":
-                // Projectile 효과에 필요한 데이터를 넘겨줍니다.
-                StartCoroutine(ProjectileCoroutine(skill.projectile_effect));
+            case "제어":
+                //StartCoroutine(ControlCoroutine(skill.shake_effect));
                 break;
-            case "Laser":
-                // Laser 효과에 필요한 데이터를 넘겨줍니다.
-                StartCoroutine(LaserCoroutine(skill.laser_effect));
+            case "회복":
+                //StartCoroutine(HealCoroutine(skill.shake_effect));
+                break;
+            case "방어":
+                //StartCoroutine(DefenseCoroutine(skill.shake_effect));
+                break;
+            default:
+                switch (skill.visual_effect_type)
+                {
+                    case "Shake":
+                        // Shake 효과에 필요한 데이터를 넘겨줍니다.
+                        StartCoroutine(ShakeCoroutine(skill.shake_effect));
+                        break;
+                    case "Projectile":
+                        // Projectile 효과에 필요한 데이터를 넘겨줍니다.
+                        StartCoroutine(ProjectileCoroutine(skill.projectile_effect));
+                        break;
+                    case "Laser":
+                        // Laser 효과에 필요한 데이터를 넘겨줍니다.
+                        StartCoroutine(LaserCoroutine(skill.laser_effect));
+                        break;
+                }
                 break;
         }
     }
@@ -216,6 +239,35 @@ public class PlayerManager : MonoBehaviour
 
         // 4. 레이저 파괴
         Destroy(laserGO);
+    }
+
+    private IEnumerator RankCoroutine(bool isStatUp)
+    {
+        Debug.Log($"랭크 애니메이션 재생: {(isStatUp ? "상승" : "하락")}");
+        float animationDuration = 1f; // 애니메이션 지속 시간
+        effectMaterial.SetColor("_EffectColor", isStatUp ? statUpColor : statDownColor);
+        float scrollDirection = isStatUp ? 1.0f : -1.0f;
+
+        float elapsedTime = 0f;
+
+        // 2. 코루틴을 통해 시간에 따라 셰이더 변수 값을 변경합니다.
+        while (elapsedTime < animationDuration)
+        {
+            elapsedTime += Time.deltaTime;
+            float progress = elapsedTime / animationDuration;
+
+            // 페이드 인/아웃: 포물선 형태로 알파값을 조절 (0 -> 1 -> 0)
+            float alpha = 8.0f * progress * progress * (1.0f - progress);
+            effectMaterial.SetFloat("_Alpha", alpha);
+
+            // 스크롤: progress에 따라 물결이 위 또는 아래로 움직임
+            effectMaterial.SetFloat("_ScrollY", -progress * scrollDirection);
+            
+            yield return null;
+        }
+
+        // 3. 애니메이션이 끝나면 효과를 완전히 끕니다.
+        effectMaterial.SetFloat("_Alpha", 0f);
     }
 
     private IEnumerator BlinkRedCoroutine(int blinkCount, float totalDuration)
