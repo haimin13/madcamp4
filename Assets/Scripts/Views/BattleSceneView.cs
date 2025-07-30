@@ -205,6 +205,7 @@ public class BattleSceneView : MonoBehaviour
     }
     public void ShowGameOver(bool isWin)
     {
+        SetSkillButtonsInteractable(false);
         if (isWin)
         {
             Debug.Log("You Win");
