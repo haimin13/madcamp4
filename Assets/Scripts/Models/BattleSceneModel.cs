@@ -42,6 +42,7 @@ public class BattleSceneModel : MonoBehaviour
         var enemy = CharacterSheet.Instance.enemies[currentRound - 1];
         enemyStatus.charaName = enemy.character_name;
         enemyStatus.charaType = enemy.character_type;
+        enemyStatus.charaImageUrl = enemy.image_url;
         enemyStatus.debuff = "정상";
         enemyStatus.duration = 0;
         enemyStatus.maxHp = enemy.stats.hp + 100;

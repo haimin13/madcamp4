@@ -25,6 +25,7 @@ public class CurrentCharacterStatus
 {
     public string charaName;
     public string charaType;
+    public string charaImageUrl;
     public string debuff;
     public int duration;
     public int currentHp;
@@ -120,6 +121,7 @@ public class GameDataManager : MonoBehaviour
                 CurrentCharacterStatus status = new CurrentCharacterStatus();
                 status.charaName = characters[i].character_name;
                 status.charaType = characters[i].character_type;
+                status.charaImageUrl = characters[i].image_url;
                 status.debuff = "정상";
                 status.duration = 0;
                 status.maxHp = characters[i].stats.hp + 100; // 체력 수치
