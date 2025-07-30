@@ -8,6 +8,9 @@ public class BattleSceneController : MonoBehaviour
     public BattleSceneModel model;
     public BattleSceneView view;
     public APIRequester apiRequester;
+    public PlayerManager player;
+    public PlayerManager enemy;
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -33,6 +36,9 @@ public class BattleSceneController : MonoBehaviour
 
         view.ShowSkills(model.charaSkills);
         view.SetStatusPanel(model.charaStatus[model.currentChara], model.enemyStatus);
+
+        player.setImage(model.charaStatus[model.currentChara].charaImageUrl);
+        enemy.setImage(model.enemyStatus.charaImageUrl);
     }
     public void SelectSkill(int skillIdx)
     {
@@ -89,6 +95,7 @@ public class BattleSceneController : MonoBehaviour
     private IEnumerator UsePlayerSkillCoroutine(int skillIdx)
     {
         Skill castedSkill = model.charaSkills[skillIdx];
+        player.PlaySkillAnimation(castedSkill);
         yield return view.SetLogtextAndWait($"{model.charaStatus[model.currentChara].charaName}은(는) {castedSkill.skill_name}을(를) 사용했다!");
 
         // if 공격스킬
@@ -100,7 +107,7 @@ public class BattleSceneController : MonoBehaviour
 
         int damage = model.CalculateDamage(castedSkill, atkStat, spAtkStat, defStat, spDefStat, defType);
 
-        // view.ShowSkillAnimation();
+        enemy.PlayHitAnimation();
 
         model.enemyStatus.currentHp -= damage;
         view.UpdateStatusPanel(status: model.enemyStatus, isEnemy: true);
@@ -123,6 +130,7 @@ public class BattleSceneController : MonoBehaviour
         // 랜덤하게 스킬 선택
         int idx = Random.Range(0, 4);
         Skill castedSkill = model.enemySkills[idx];
+        enemy.PlaySkillAnimation(castedSkill);
         yield return view.SetLogtextAndWait($"{model.enemyStatus.charaName}은(는) {castedSkill.skill_name}을(를) 사용했다!");
 
         // if 공격스킬
@@ -135,7 +143,7 @@ public class BattleSceneController : MonoBehaviour
         int damage = model.CalculateDamage(castedSkill, atkStat, spAtkStat, defStat, spDefStat, defType);
 
         // 애니메이션 출력
-        // view.ShowSkillAnimation();
+        player.PlayHitAnimation();
 
         model.charaStatus[model.currentChara].currentHp -= damage;
         view.UpdateStatusPanel(status: model.charaStatus[model.currentChara], isEnemy: false);
@@ -205,6 +213,7 @@ public class BattleSceneController : MonoBehaviour
         model.currentChara = model.candidate;
         model.candidate = 99;
         model.LoadCharaSkills();
+        player.setImage(model.charaStatus[model.currentChara].charaImageUrl);
         view.ShowSkills(model.charaSkills);
         view.UpdateStatusPanel(model.charaStatus[model.currentChara], false);
 

@@ -98,30 +98,41 @@ public class APIRequester : MonoBehaviour
         }
     }
 
-
     #region 이미지 다운로드 및 캐싱
 
     /// <summary>
     /// 이미지 URL을 받아 스프라이트를 반환합니다. 캐시된 이미지를 우선 사용합니다.
     /// </summary>
-    /// <param name="url">이미지의 전체 웹 URL</param>
-    /// <param name="onComplete">스프라이트 로딩이 완료되었을 때 호출될 콜백</param>
-    public void GetSprite(string url, Action<Sprite> onComplete)
+    /// <param name="imageUrl">이미지의 웹 URL (상대 또는 절대 경로)</param>
+    /// <param name="onComplete">스프라이트 로딩이 완료되었을 때 호출될 '진동벨' 같은 콜백 함수입니다.</param>
+    public void GetSprite(string imageUrl, Action<Sprite> onComplete)
     {
-        // URL이 비어있으면 아무 작업도 하지 않음
-        if (string.IsNullOrEmpty(url))
+        if (string.IsNullOrEmpty(imageUrl))
         {
             onComplete?.Invoke(null);
             return;
         }
 
-        // 상대 경로인 경우 (예: /static/images/...), baseUrl을 붙여줌
-        if (url.StartsWith("/"))
-        {
-            url = baseUrl + url;
-        }
+        string finalUrl;
 
-        StartCoroutine(LoadSpriteCoroutine(url, onComplete));
+        // (수정) URL이 이미 http로 시작하는지 확인하여 절대 경로/상대 경로를 더 확실하게 구분합니다.
+        if (imageUrl.StartsWith("http"))
+        {
+            finalUrl = imageUrl;
+        }
+        else
+        {
+            // baseUrl이 비어있는지 확인하여 더 명확한 에러를 출력합니다.
+            if (string.IsNullOrEmpty(baseUrl))
+            {
+                Debug.LogError("NetworkManager의 baseUrl이 비어있어 상대 경로 이미지를 불러올 수 없습니다!");
+                onComplete?.Invoke(null);
+                return;
+            }
+            finalUrl = baseUrl + imageUrl;
+        }
+        print(finalUrl);
+        StartCoroutine(LoadSpriteCoroutine(finalUrl, onComplete));
     }
 
     private IEnumerator LoadSpriteCoroutine(string url, Action<Sprite> onComplete)
@@ -130,7 +141,6 @@ public class APIRequester : MonoBehaviour
 
         if (File.Exists(localPath))
         {
-            // 캐시에서 이미지 불러오기
             byte[] fileData = File.ReadAllBytes(localPath);
             Texture2D texture = new Texture2D(2, 2);
             texture.LoadImage(fileData);
@@ -139,7 +149,6 @@ public class APIRequester : MonoBehaviour
         }
         else
         {
-            // 웹에서 이미지 다운로드
             using (UnityWebRequest www = UnityWebRequestTexture.GetTexture(url))
             {
                 yield return www.SendWebRequest();
@@ -148,7 +157,7 @@ public class APIRequester : MonoBehaviour
                 {
                     Texture2D texture = DownloadHandlerTexture.GetContent(www);
                     byte[] pngData = texture.EncodeToPNG();
-                    File.WriteAllBytes(localPath, pngData); // 로컬에 저장 (캐싱)
+                    File.WriteAllBytes(localPath, pngData);
 
                     Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
                     onComplete?.Invoke(sprite);
