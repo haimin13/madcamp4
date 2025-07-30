@@ -60,7 +60,7 @@ public class BattleSceneView : MonoBehaviour
     }
     public void SetSkillButtonsInteractable(bool enable)
     {
-        switchButton.interactable = enable;
+        switchPanelButton.interactable = enable;
         foreach (var btn in skillButtons)
             btn.interactable = enable;
     }
@@ -124,7 +124,10 @@ public class BattleSceneView : MonoBehaviour
         var candidateSkillButtons = new List<Button>(candidateSkillPanel.GetComponentsInChildren<Button>(true));
         foreach (var btn in candidateSkillButtons)
         {
-            btn.gameObject.SetActive(false);
+            if (btn.gameObject.name.Contains("SkillButton"))
+            {
+                btn.gameObject.SetActive(false);
+            }
         }
         // 캐릭터 스테이터스 반영해서 캐릭터 표시
         for (int i = 0; i < model.charaStatus.Count; i++)
@@ -155,6 +158,28 @@ public class BattleSceneView : MonoBehaviour
                 var btnBg = btn.GetComponent<Image>();
                 if (btnBg != null)
                     btnBg.color = Color.red;
+                foreach (Transform child in btn.transform)
+                {
+                    var img = child.GetComponent<Image>();
+                    if (img != null)
+                    {
+                        img.color = Color.red;
+                    }
+                }
+            }
+            else if (i == model.currentChara)
+            {
+                var btnBg = btn.GetComponent<Image>();
+                if (btnBg != null)
+                    btnBg.color = Color.gray;
+                foreach (Transform child in btn.transform)
+                {
+                    var img = child.GetComponent<Image>();
+                    if (img != null)
+                    {
+                        img.color = Color.gray;
+                    }
+                }
             }
         }
         
