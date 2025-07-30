@@ -143,7 +143,7 @@
                     "base_power": 70,
                     "damage_type": "특수",
                     "skill_type": "시스템 교란",
-                    "visual_effect_type": "0",
+                    "visual_effect_type": "Shake",
                     "shake_effect": {
                         "particle_color": "#FF4500"
                     },
@@ -164,7 +164,7 @@
                     "base_power": 100,
                     "damage_type": "특수",
                     "skill_type": "빙결 폭파",
-                    "visual_effect_type": "0",
+                    "visual_effect_type": "Projectile",
                     "shake_effect": {
                         "particle_color": ""
                     },
@@ -185,7 +185,7 @@
                     "base_power": 60,
                     "damage_type": "특수",
                     "skill_type": "환경 조작",
-                    "visual_effect_type": "0",
+                    "visual_effect_type": "Projectile",
                     "shake_effect": {
                         "particle_color": ""
                     },
@@ -223,7 +223,7 @@
                     "base_power": 75,
                     "damage_type": "물리",
                     "skill_type": "생활물품 투척",
-                    "visual_effect_type": "0",
+                    "visual_effect_type": "Projectile",
                     "shake_effect": {
                         "particle_color": ""
                     },
@@ -244,7 +244,7 @@
                     "base_power": 90,
                     "damage_type": "특수",
                     "skill_type": "정신적 폭발",
-                    "visual_effect_type": "0",
+                    "visual_effect_type": "Projectile",
                     "shake_effect": {
                         "particle_color": "#FF0000"
                     },
@@ -265,7 +265,7 @@
                     "base_power": 80,
                     "damage_type": "특수",
                     "skill_type": "광선 방출",
-                    "visual_effect_type": "0",
+                    "visual_effect_type": "Laser",
                     "shake_effect": {
                         "particle_color": ""
                     },
@@ -286,7 +286,7 @@
                     "base_power": 65,
                     "damage_type": "특수",
                     "skill_type": "생활 오물 투척",
-                    "visual_effect_type": "0",
+                    "visual_effect_type": "Projectile",
                     "shake_effect": {
                         "particle_color": ""
                     },

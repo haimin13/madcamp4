@@ -10,6 +10,9 @@ public class BattleSceneView : MonoBehaviour
 {
     public BattleSceneModel model;
     public GameObject skillPanel;
+    public GameObject gameOverPanel;
+    public CanvasGroup gameOverCanvasGroup; // 게임 오버 패널의 CanvasGroup
+    public Button gameOverButton; // 게임 오버 패널의 버튼
     public List<Button> skillButtons;
     public GameObject charaStatus;
     public GameObject enemyStatus;
@@ -50,6 +53,7 @@ public class BattleSceneView : MonoBehaviour
             int idx = i;
             charaButtons[i].onClick.AddListener(() => OnCharaClicked(idx));
         }
+        gameOverButton.onClick.AddListener(() => {restartGame();});
     }
 
     void OnSkillClicked(int btnIndex)
@@ -62,6 +66,7 @@ public class BattleSceneView : MonoBehaviour
     {
         foreach (var btn in skillButtons)
             btn.interactable = enable;
+        switchPanelButton.interactable = enable;
     }
     public void ShowSkills(List<Skill> skills)
     {
@@ -156,7 +161,7 @@ public class BattleSceneView : MonoBehaviour
                     btnBg.color = Color.red;
             }
         }
-        
+
     }
 
     public void OnSwitchButtonClicked()
@@ -191,7 +196,7 @@ public class BattleSceneView : MonoBehaviour
                     typeText.text = skills[i].skill_type;
             }
         }
-        
+
     }
     public void OnCancelButtonClicked()
     {
@@ -215,12 +220,34 @@ public class BattleSceneView : MonoBehaviour
         else
         {
             Debug.Log("You Lost");
+            StartCoroutine(ShowGameOverCoroutine());
         }
     }
 
-    // Update is called once per frame
-    void Update()
+    private IEnumerator ShowGameOverCoroutine()
     {
-        
+        // 1. 패널을 활성화하고, 처음에는 완전히 투명하게 설정합니다.
+        gameOverPanel.SetActive(true);
+        gameOverCanvasGroup.alpha = 0f;
+
+        // 2. 지정된 시간(예: 1.5초) 동안 서서히 나타나게 합니다.
+        float duration = 1.5f;
+        float elapsedTime = 0f;
+
+        while (elapsedTime < duration)
+        {
+            // 경과 시간에 따라 alpha 값을 0에서 1로 부드럽게 변경합니다.
+            elapsedTime += Time.deltaTime;
+            gameOverCanvasGroup.alpha = Mathf.Clamp01(elapsedTime / duration);
+            yield return null; // 다음 프레임까지 대기
+        }
+
+        // 3. 애니메이션이 끝나면 alpha 값을 확실하게 1로 설정합니다.
+        gameOverCanvasGroup.alpha = 1f;
+        gameOverCanvasGroup.interactable = true; // 이제 버튼 등을 클릭할 수 있게 설정
+    }
+    public void restartGame()
+    {
+        SceneManager.LoadScene("ChampCreateScene");
     }
 }

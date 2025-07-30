@@ -218,6 +218,7 @@ public class BattleSceneController : MonoBehaviour
         view.UpdateStatusPanel(model.charaStatus[model.currentChara], false);
 
         view.switchPanel.SetActive(false);
+        view.SetSkillButtonsInteractable(false); // 스킬 버튼 비활성화
 
         yield return view.SetLogtextAndWait($"{prevChara} → {nextChara}로 교체했다!", 1.0f);
 
@@ -245,11 +246,5 @@ public class BattleSceneController : MonoBehaviour
             view.SetSkillButtonsInteractable(true);
             yield break;
         }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }
