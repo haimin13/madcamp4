@@ -62,9 +62,18 @@ public class GameDataManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        bool debugMode = false;
         if (APIRequester.Instance != null)
             apiRequester = APIRequester.Instance;
-        currentRound = 0;
+        if (debugMode)
+        {
+            currentRound = 1;
+            selectedChara = 0;
+        }
+        else
+        {
+            currentRound = 0;
+        }
     }
 
     public void SetChampion(string response)
@@ -175,12 +184,18 @@ public class GameDataManager : MonoBehaviour
 
     public void SaveCharacters()
     {
+        Debug.Log("SaveCharacters");
         string path = Application.dataPath + "/characters.json";
         string json = CharacterSheet.Instance.ToJsonOfCharacters();
+        File.WriteAllText(path, json);
+
+        path = Application.dataPath + "/enemies.json";
+        json = CharacterSheet.Instance.ToJsonOfEnemies();
         File.WriteAllText(path, json);
     }
     public void LoadCharacters()
     {
+        Debug.Log("LoadCharacters");
         string path = Application.dataPath + "/characters.json";
         if (!File.Exists(path))
         {
@@ -190,6 +205,35 @@ public class GameDataManager : MonoBehaviour
         string json = File.ReadAllText(path);
         var charaList = CharacterSheet.Instance.ParseMultipleCharacterData(json);
         CharacterSheet.Instance.characters = charaList;
+
+        path = Application.dataPath + "/enemies.json";
+        if (!File.Exists(path))
+        {
+            Debug.LogWarning("적 파일이 없습니다: " + path);
+            return;
+        }
+        json = File.ReadAllText(path);
+        charaList = CharacterSheet.Instance.ParseEnemiesData(json);
+        CharacterSheet.Instance.enemies = charaList;
+    }
+    public void SaveTypeChart()
+    {
+        Debug.Log("SaveTypeChart");
+        string path = Application.dataPath + "/typeChart.json";
+        string json = JsonConvert.SerializeObject(typeChart);
+        File.WriteAllText(path, json);
+    }
+    public void LoadTypeChart()
+    {
+        Debug.Log("LoadTypeChart");
+        string path = Application.dataPath + "/typeChart.json";
+        if (!File.Exists(path))
+        {
+            Debug.LogWarning("타입차트 파일이 없습니다: " + path);
+            return;
+        }
+        string json = File.ReadAllText(path);
+        typeChart = JsonConvert.DeserializeObject <Dictionary<string, Dictionary<string, float>>>(json);
     }
 
     // Update is called once per frame

@@ -11,8 +11,23 @@ public class BattleSceneController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        bool debug = true;
+        if (debug)
+        {
+            GameDataManager.Instance.currentRound = 1;
+            GameDataManager.Instance.selectedChara = 0;
+            // save
+            // GameDataManager.Instance.SaveCharacters();
+            // GameDataManager.Instance.SaveTypeChart();
+
+            // load
+            GameDataManager.Instance.LoadCharacters();
+            GameDataManager.Instance.LoadTypeChart();
+            GameDataManager.Instance.UpdateCharacterStatus();
+        }
         if (APIRequester.Instance != null)
             apiRequester = APIRequester.Instance;
+
         model.LoadCurrentStatus();
         model.LoadTypeChart();
 

@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 // ScriptableObject 애셋 생성용
 [CreateAssetMenu(fileName = "New Character Sheet", menuName = "AI-Rouge/Character Sheet")]
@@ -63,6 +64,20 @@ public class CharacterSheet : ScriptableObject
             return JsonUtility.ToJson(wrapper, true);
         }
     }
+    public string ToJsonOfEnemies()
+    {
+        var req = new List<CharacterData>(enemies);
+        string json = JsonConvert.SerializeObject(req);
+        return json;
+    }
+
+    public List<CharacterData> ParseEnemiesData(string json)
+    {
+        var enemies = JsonConvert.DeserializeObject<List<CharacterData>>(json);
+        return enemies;
+    }
+
+    
 }
 
 // 배열을 JsonUtility로 읽으려면 중간 래퍼 클래스가 필요해요

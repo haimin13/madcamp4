@@ -44,7 +44,6 @@ public class APIRequester : MonoBehaviour
         System.Action<string> onSuccess = null,
         System.Action<string> onError = null)
     {
-        Debug.Log("요청보낸다");
         // 쿼리 문자열 빌드
         string queryString = "";
         if (queryParams != null && queryParams.Count > 0)

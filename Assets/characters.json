@@ -286,7 +286,7 @@
                     "base_power": 65,
                     "damage_type": "특수",
                     "skill_type": "생활 오물 투척",
-                    "visual_effect_type":"0",
+                    "visual_effect_type": "0",
                     "shake_effect": {
                         "particle_color": ""
                     },
