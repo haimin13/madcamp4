@@ -254,8 +254,9 @@ public class BattleSceneView : MonoBehaviour
         if (isWin)
         {
             Debug.Log("You Win");
+            controller.WinBattle();
             // 게임오버 화면 구현
-            // 
+
         }
         else
         {

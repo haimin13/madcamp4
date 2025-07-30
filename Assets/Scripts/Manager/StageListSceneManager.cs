@@ -120,28 +120,6 @@ public class StageListSceneManager : MonoBehaviour
 
     }
 
-    void OnToggleChanged()
-    {
-        Debug.Log("OnToggleChanged");
-        var activeToggle = charaToggleGroup.ActiveToggles().FirstOrDefault();
-        if (activeToggle != null)
-        {
-            Debug.Log("yes active toggle!");
-            int index = charaToggles.IndexOf(activeToggle);
-            if (GameDataManager.Instance != null)
-            {
-                Debug.Log("GameDataManager.Instance.selectedChara = index");
-                GameDataManager.Instance.selectedChara = index;
-                Debug.Log($"selectedChara = {GameDataManager.Instance.selectedChara}");
-            }
-        }
-        else
-        {
-            Debug.Log("no active toggle!");
-        }
-        Debug.Log($"after: selectedChara = {GameDataManager.Instance.selectedChara}");
-    }
-
     void ClosePanel()
     {
         detailPanel.SetActive(false);

@@ -85,7 +85,14 @@ public class BattleSceneModel : MonoBehaviour
             def = spDefStat;
         }
         return (int)(atk * 100f / (def + 50f));
-
     }
-
+    public void StoreCurrentState()
+    {
+        GameDataManager.Instance.selectedChara = currentChara;
+        for (int i = 0; i < charaStatus.Count; i++)
+        {
+            GameDataManager.Instance.charaStatus[i].currentHp = charaStatus[i].currentHp;
+            GameDataManager.Instance.charaStatus[i].isAlive = charaStatus[i].isAlive;
+        }
+    }
 }

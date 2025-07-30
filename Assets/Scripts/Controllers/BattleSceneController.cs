@@ -248,4 +248,8 @@ public class BattleSceneController : MonoBehaviour
             yield break;
         }
     }
+    public void WinBattle()
+    {
+        model.StoreCurrentState();
+    }
 }
