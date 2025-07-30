@@ -25,7 +25,9 @@ public class StageListSceneManager : MonoBehaviour
 
     void Start()
     {
+        Debug.Log($"before {GameDataManager.Instance.currentRound}");
         GameDataManager.Instance.currentRound += 1;
+        Debug.Log($"after {GameDataManager.Instance.currentRound}");
         CreateEnemyList();
         ShowCurrentEnemy();
         SetToggles();
@@ -133,7 +135,6 @@ public class StageListSceneManager : MonoBehaviour
 
     void StartBattle()
     {
-
         if (GameDataManager.Instance != null)
         {
             int selected = GameDataManager.Instance.selectedChara;

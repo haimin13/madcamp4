@@ -63,19 +63,8 @@ public class GameDataManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        bool debugMode = false;
         if (APIRequester.Instance != null)
             apiRequester = APIRequester.Instance;
-            
-        if (debugMode)
-        {
-            currentRound = 1;
-            selectedChara = 0;
-        }
-        else
-        {
-            currentRound = 0;
-        }
     }
 
     public void ResetChampions()

@@ -15,11 +15,14 @@ public class BattleSceneController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        bool debug = false;
+        bool debug = true;
         if (debug)
         {
             GameDataManager.Instance.currentRound = 1;
+            Debug.Log(GameDataManager.Instance.currentRound);
             GameDataManager.Instance.selectedChara = 0;
+            GameDataManager.Instance.runId = "run_2b42a1c3-12c3-4f74-8be3-2d38801cd931";
+
             // save
             // GameDataManager.Instance.SaveCharacters();
             // GameDataManager.Instance.SaveTypeChart();

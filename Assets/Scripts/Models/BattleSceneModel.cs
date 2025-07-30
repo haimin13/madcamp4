@@ -88,7 +88,7 @@ public class BattleSceneModel : MonoBehaviour
     }
     public void StoreCurrentState()
     {
-        GameDataManager.Instance.selectedChara = currentChara;
+        GameDataManager.Instance.selectedChara = 99;
         for (int i = 0; i < charaStatus.Count; i++)
         {
             GameDataManager.Instance.charaStatus[i].currentHp = charaStatus[i].currentHp;
