@@ -23,6 +23,7 @@ public class ChampionCreateSceneManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        GameDataManager.Instance.ResetChampions();
         OKButton.onClick.AddListener(OnOKButtonClicked);
         sendButton.onClick.AddListener(OnSendButtonClicked);
         nextButton.onClick.AddListener(OnNextButtonClicked);
@@ -90,15 +91,17 @@ public class ChampionCreateSceneManager : MonoBehaviour
     {
         CharacterData chara = CharacterSheet.Instance.characters[champIdx];
         string skillsText = "";
-        foreach (var skill in chara.skills) {
-            skillsText += $"\n\t{skill.skill_name}: {skill.description}";
+        string space = "    ";
+        foreach (var skill in chara.skills)
+        {
+            skillsText += $"\n{space}{skill.skill_name}({skill.skill_type}):\n{space}{space}{skill.description}";
         }
         champInfoText.text = (
             $"이름: {chara.character_name}\n" +
             $"설명: {chara.description}\n" +
             $"타입: {chara.character_type}\n" +
-            $"스탯:\n\t체력: {chara.stats.hp}\n\t공격: {chara.stats.atk}\n\t방어: {chara.stats.def}\n\t" + 
-            $"특공: {chara.stats.sp_atk}\n\t특방: {chara.stats.sp_def}\n\t스피드: {chara.stats.speed}\n" +
+            $"스탯:\n{space}체력: {chara.stats.hp}\n{space}공격: {chara.stats.atk}\n{space}방어: {chara.stats.def}\n{space}" + 
+            $"특공: {chara.stats.sp_atk}\n{space}특방: {chara.stats.sp_def}\n{space}스피드: {chara.stats.speed}\n" +
             "스킬:" + skillsText +"\n");
     }
     void OnNextButtonClicked()

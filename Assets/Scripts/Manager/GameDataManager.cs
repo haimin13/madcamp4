@@ -66,6 +66,7 @@ public class GameDataManager : MonoBehaviour
         bool debugMode = false;
         if (APIRequester.Instance != null)
             apiRequester = APIRequester.Instance;
+            
         if (debugMode)
         {
             currentRound = 1;
@@ -77,6 +78,14 @@ public class GameDataManager : MonoBehaviour
         }
     }
 
+    public void ResetChampions()
+    {
+        if (CharacterSheet.Instance != null)
+        {
+            CharacterSheet.Instance.characters = new List<CharacterData>();
+            CharacterSheet.Instance.enemies = new List<CharacterData>();
+        }
+    }
     public void SetChampion(string response)
     {
         if (CharacterSheet.Instance != null)
@@ -236,6 +245,24 @@ public class GameDataManager : MonoBehaviour
         }
         string json = File.ReadAllText(path);
         typeChart = JsonConvert.DeserializeObject <Dictionary<string, Dictionary<string, float>>>(json);
+    }
+    public string GetCharaDescription(CharacterData chara)
+    {
+        string skillsText = "";
+        string space = "    ";
+        foreach (var skill in chara.skills)
+        {
+            skillsText += $"\n{space}{skill.skill_name}({skill.skill_type}):\n{space}{space}{skill.description}";
+        }
+        string desc = (
+            $"이름: {chara.character_name}\n" +
+            $"설명: {chara.description}\n" +
+            $"타입: {chara.character_type}\n" +
+            $"스탯:\n{space}체력: {chara.stats.hp}\n{space}공격: {chara.stats.atk}\n{space}방어: {chara.stats.def}\n{space}" +
+            $"특공: {chara.stats.sp_atk}\n{space}특방: {chara.stats.sp_def}\n{space}스피드: {chara.stats.speed}\n" +
+            "스킬:" + skillsText + "\n");
+
+        return desc;
     }
 
     // Update is called once per frame
