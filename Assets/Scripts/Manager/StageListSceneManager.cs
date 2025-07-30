@@ -55,7 +55,7 @@ public class StageListSceneManager : MonoBehaviour
             });
             item.transform.Find("EnemyName").GetComponent<TextMeshProUGUI>().text = enemyList[i].character_name;
             item.transform.Find("EnemyRound").GetComponent<TextMeshProUGUI>().text = $"Round {i + 1}";
-            
+
             var le = item.GetComponent<LayoutElement>();
             if (le == null)
                 le = item.AddComponent<LayoutElement>();
@@ -70,10 +70,19 @@ public class StageListSceneManager : MonoBehaviour
     void SetToggles()
     {
         charaToggles = charaToggleGroup.GetComponentsInChildren<Toggle>().ToList();
+        Debug.Log($"toggle count = {charaToggles.Count}");
         for (int i = 0; i < charaToggles.Count; i++)
         {
             Toggle tog = charaToggles[i];
-            tog.onValueChanged.AddListener((_) => OnToggleChanged());
+            int capturedIndex = i;
+            tog.onValueChanged.AddListener((isOn) =>
+            {
+                if (isOn)
+                {
+                    GameDataManager.Instance.selectedChara = capturedIndex;
+                    Debug.Log($"selectedChara = {capturedIndex}");
+                }
+            });
             var charaName = tog.GetComponentInChildren<TextMeshProUGUI>();
             charaName.text = CharacterSheet.Instance.characters[i].character_name;
         }
@@ -117,11 +126,20 @@ public class StageListSceneManager : MonoBehaviour
         var activeToggle = charaToggleGroup.ActiveToggles().FirstOrDefault();
         if (activeToggle != null)
         {
+            Debug.Log("yes active toggle!");
             int index = charaToggles.IndexOf(activeToggle);
             if (GameDataManager.Instance != null)
+            {
                 Debug.Log("GameDataManager.Instance.selectedChara = index");
-            GameDataManager.Instance.selectedChara = index;
+                GameDataManager.Instance.selectedChara = index;
+                Debug.Log($"selectedChara = {GameDataManager.Instance.selectedChara}");
+            }
         }
+        else
+        {
+            Debug.Log("no active toggle!");
+        }
+        Debug.Log($"after: selectedChara = {GameDataManager.Instance.selectedChara}");
     }
 
     void ClosePanel()
@@ -151,12 +169,15 @@ public class StageListSceneManager : MonoBehaviour
                     // 이 시점에서만 데이터 로딩 끝났음!
                     loadingPanel.SetActive(false);
                     SceneManager.LoadScene("BattleScene");
-                    
                 }, () =>
                 {
                     loadingPanel.SetActive(false);
                 });
             }
         }
+    }
+    void Update()
+    {
+        
     }
 }
