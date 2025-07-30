@@ -60,6 +60,7 @@ public class BattleSceneView : MonoBehaviour
     }
     public void SetSkillButtonsInteractable(bool enable)
     {
+        switchButton.interactable = enable;
         foreach (var btn in skillButtons)
             btn.interactable = enable;
     }
