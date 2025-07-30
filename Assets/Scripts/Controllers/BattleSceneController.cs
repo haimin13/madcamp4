@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class BattleSceneController : MonoBehaviour
 {
@@ -14,7 +15,7 @@ public class BattleSceneController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        bool debug = true;
+        bool debug = false;
         if (debug)
         {
             GameDataManager.Instance.currentRound = 1;
@@ -248,8 +249,10 @@ public class BattleSceneController : MonoBehaviour
             yield break;
         }
     }
-    public void WinBattle()
+
+    public void GoNextRound()
     {
         model.StoreCurrentState();
+        SceneManager.LoadScene("StageListScene");
     }
 }

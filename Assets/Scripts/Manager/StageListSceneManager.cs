@@ -22,6 +22,7 @@ public class StageListSceneManager : MonoBehaviour
     public Button detailButton;
     public Button closeButton;
 
+
     void Start()
     {
         GameDataManager.Instance.currentRound += 1;
@@ -85,6 +86,11 @@ public class StageListSceneManager : MonoBehaviour
             });
             var charaName = tog.GetComponentInChildren<TextMeshProUGUI>();
             charaName.text = CharacterSheet.Instance.characters[i].character_name;
+            if (!GameDataManager.Instance.charaStatus[i].isAlive)
+            {
+                tog.interactable = false;
+                tog.targetGraphic.color = Color.red;
+            }
         }
     }
 

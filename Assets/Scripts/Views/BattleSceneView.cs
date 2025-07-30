@@ -10,6 +10,8 @@ public class BattleSceneView : MonoBehaviour
 {
     public BattleSceneModel model;
     public GameObject skillPanel;
+    public GameObject winPanel;
+    public Button nextRoundButton;
     public GameObject gameOverPanel;
     public CanvasGroup gameOverCanvasGroup; // 게임 오버 패널의 CanvasGroup
     public Button gameOverButton; // 게임 오버 패널의 버튼
@@ -53,7 +55,7 @@ public class BattleSceneView : MonoBehaviour
             int idx = i;
             charaButtons[i].onClick.AddListener(() => OnCharaClicked(idx));
         }
-        gameOverButton.onClick.AddListener(() => {restartGame();});
+        gameOverButton.onClick.AddListener(() => { restartGame(); });
     }
 
     void OnSkillClicked(int btnIndex)
@@ -254,9 +256,8 @@ public class BattleSceneView : MonoBehaviour
         if (isWin)
         {
             Debug.Log("You Win");
-            controller.WinBattle();
             // 게임오버 화면 구현
-
+            ShowWinPanel();
         }
         else
         {
@@ -291,5 +292,10 @@ public class BattleSceneView : MonoBehaviour
     {
         // TODO 케릭터 만들어진거 삭제하는 코드 만들기
         SceneManager.LoadScene("ChampCreateScene");
+    }
+    public void ShowWinPanel()
+    {
+        winPanel.SetActive(true);
+        nextRoundButton.onClick.AddListener(controller.GoNextRound);
     }
 }
