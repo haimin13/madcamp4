@@ -186,6 +186,20 @@ public class BattleSceneView : MonoBehaviour
                     }
                 }
             }
+            else
+            {
+                var btnBg = btn.GetComponent<Image>();
+                if (btnBg != null)
+                    btnBg.color = Color.white;
+                foreach (Transform child in btn.transform)
+                {
+                    var img = child.GetComponent<Image>();
+                    if (img != null)
+                    {
+                        img.color = Color.white;
+                    }
+                }
+            }
         }
 
     }
