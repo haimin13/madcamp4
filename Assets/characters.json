@@ -4,7 +4,7 @@
             "character_id": "",
             "character_name": "파워풀 기린",
             "description": "거대한 몸에서 뿜어져 나오는 압도적인 힘으로 적을 제압하는 기린 전사입니다.",
-            "image_url": "/static/images/image_6f97a642-d5b5-4599-b1ec-136d335de0af.png",
+            "image_url": "/static/images/image_bd802f7f-8ca1-4f6b-a449-774143c52d17.png",
             "stats": {
                 "hp": 90,
                 "atk": 120,
@@ -105,7 +105,7 @@
             "character_id": "",
             "character_name": "에어컨 디액티베이터",
             "description": "공조 시스템을 무력화하고 주변 환경을 교란하는 능력을 지닌 존재.",
-            "image_url": "/static/images/image_e2d7ed75-8efb-48c8-a891-f03ea2c4187c.png",
+            "image_url": "/static/images/image_ed59ccd1-4cfc-4243-8d5d-2b2109f84ef8.png",
             "stats": {
                 "hp": 80,
                 "atk": 50,
@@ -206,7 +206,7 @@
             "character_id": "",
             "character_name": "방구석 폐인 - 김집돌",
             "description": "세상과 단절된 채 집 안에서 자신만의 세계를 구축한 은둔형 캐릭터입니다. 의외의 지식과 비범한 생활 스킬로 상대를 제압합니다.",
-            "image_url": "/static/images/image_161b1327-b96c-42b1-a8b9-8b91a26121b1.png",
+            "image_url": "/static/images/image_bd802f7f-8ca1-4f6b-a449-774143c52d17.png",
             "stats": {
                 "hp": 100,
                 "atk": 60,
