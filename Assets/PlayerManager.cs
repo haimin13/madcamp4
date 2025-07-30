@@ -5,7 +5,8 @@ using UnityEngine;
 public class PlayerManager : MonoBehaviour
 {
     public GameObject playerImage;
-    public Transform EnemyTransform;
+    public Transform target;
+    public GameObject projectilePrefab; // 투사체 프리팹
     public bool isEnemy = false;
     private Vector3 originalPosition;
     private SpriteRenderer characterSprite;
@@ -73,13 +74,47 @@ public class PlayerManager : MonoBehaviour
         }
         transform.position = originalPosition;
     }
-
-    private IEnumerator ProjectileCoroutine(ProjectileEffect effectData)
+private IEnumerator ProjectileCoroutine(ProjectileEffect effectData)
     {
-        // 이 곳에 투사체를 생성하고 발사하는 로직을 구현합니다.
+        if (projectilePrefab == null || target == null)
+        {
+            Debug.LogError("Projectile Prefab 또는 Target이 설정되지 않았습니다!");
+            yield break;
+        }
+
         Debug.Log($"투사체 애니메이션 재생: {effectData.shape} 모양 {effectData.count}개, 색상 {effectData.color}");
-        // 예시: 투사체 프리팹을 생성하고, ObjectMover 스크립트로 목표를 향해 이동시킴
-        yield return new WaitForSeconds(1.0f); // 애니메이션 길이에 맞춰 대기
+        yield return new WaitForSeconds(0.7f); // 애니메이션 시작 전 잠시 대기
+        for (int i = 0; i < effectData.count; i++)
+        {
+            // 캐릭터 주변에 약간의 랜덤한 오프셋을 주어 투사체를 생성합니다.
+            Vector3 spawnOffset = (Vector3)UnityEngine.Random.insideUnitCircle * 0.5f;
+            Vector3 spawnPosition = transform.position + spawnOffset;
+
+            GameObject projectileGO = Instantiate(projectilePrefab, spawnPosition, Quaternion.identity);
+            
+            // 투사체 색상 설정 (선택 사항)
+            var projectileRenderer = projectileGO.GetComponent<SpriteRenderer>();
+            if (projectileRenderer != null && ColorUtility.TryParseHtmlString(effectData.color, out Color projectileColor))
+            {
+                projectileRenderer.color = projectileColor;
+            }
+
+            // ProjectileManager에 목표와 속도를 알려줍니다.
+            ProjectileManager projectileManager = projectileGO.GetComponent<ProjectileManager>();
+            if (projectileManager != null)
+            {
+                projectileManager.Initialize(target, 30f); // 10f는 투사체 속도
+            }
+
+            // 여러 발을 쏠 경우, 약간의 시간 간격을 둡니다.
+            if (effectData.count > 1)
+            {
+                yield return new WaitForSeconds(0.5f);
+            }
+        }
+
+        // 모든 투사체가 발사된 후, 애니메이션이 끝났다고 간주하고 잠시 대기합니다.
+        yield return new WaitForSeconds(0.5f);
     }
 
     private IEnumerator LaserCoroutine(LaserEffect effectData)
