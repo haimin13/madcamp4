@@ -63,7 +63,7 @@
                     "base_power": 110,
                     "damage_type": "특수",
                     "skill_type": "천상 광선",
-                    "visual_effect_type": "0",
+                    "visual_effect_type": "Laser",
                     "shake_effect": {
                         "particle_color": ""
                     },
@@ -132,7 +132,7 @@
                         "color": ""
                     },
                     "laser_effect": {
-                        "origin": "Player",
+                        "origin": "TopToBottom",
                         "thickness": 2,
                         "color": "#00BFFF"
                     }

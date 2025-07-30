@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3735261140103949155}
   - component: {fileID: 7857878816522586660}
   m_Layer: 0
-  m_Name: Projectile
+  m_Name: ProjectilePrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -97,3 +97,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5c5b59139a3051498b354b83223a916, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spriteRenderer: {fileID: 3735261140103949155}
+  squareSprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
