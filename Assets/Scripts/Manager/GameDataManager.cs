@@ -66,6 +66,7 @@ public class GameDataManager : MonoBehaviour
         bool debugMode = false;
         if (APIRequester.Instance != null)
             apiRequester = APIRequester.Instance;
+            
         if (debugMode)
         {
             currentRound = 1;
@@ -77,6 +78,14 @@ public class GameDataManager : MonoBehaviour
         }
     }
 
+    public void ResetChampions()
+    {
+        if (CharacterSheet.Instance != null)
+        {
+            CharacterSheet.Instance.characters = new List<CharacterData>();
+            CharacterSheet.Instance.enemies = new List<CharacterData>();
+        }
+    }
     public void SetChampion(string response)
     {
         if (CharacterSheet.Instance != null)

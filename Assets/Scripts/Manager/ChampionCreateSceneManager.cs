@@ -23,6 +23,7 @@ public class ChampionCreateSceneManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        GameDataManager.Instance.ResetChampions();
         OKButton.onClick.AddListener(OnOKButtonClicked);
         sendButton.onClick.AddListener(OnSendButtonClicked);
         nextButton.onClick.AddListener(OnNextButtonClicked);
