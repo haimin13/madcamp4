@@ -116,6 +116,7 @@ public class ChampionCreateSceneManager : MonoBehaviour
         {
             text.text = $"({createdCount}/3)";
         }
+        champDescription.text = "";
         champInfoPanel.SetActive(false);
     }
     void OnStartButtonClicked()
