@@ -121,7 +121,7 @@ public class PlayerManager : MonoBehaviour
         {
             // 캐릭터 주변에 약간의 랜덤한 오프셋을 주어 투사체를 생성합니다.
             Vector3 spawnOffset = (Vector3)UnityEngine.Random.insideUnitCircle * 0.5f;
-            Vector3 spawnPosition = player.transform.position + spawnOffset;
+            Vector3 spawnPosition = transform.position + spawnOffset;
 
             GameObject projectileGO = Instantiate(projectilePrefab, spawnPosition, Quaternion.identity);
 
