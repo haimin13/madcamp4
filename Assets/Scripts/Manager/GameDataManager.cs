@@ -37,6 +37,8 @@ public class CurrentCharacterStatus
     public int tmpSpeed;
     public bool isAlive;
     public int healCount;
+    public int controlPower;
+    public string controlName;
 }
 public class GameDataManager : MonoBehaviour
 {
@@ -132,6 +134,8 @@ public class GameDataManager : MonoBehaviour
                 status.tmpSpeed = characters[i].stats.speed;
                 status.isAlive = true;
                 status.healCount = 0;
+                status.controlPower = 0;
+                status.controlName = "정상";
                 charaStatus.Add(status);
             }
         }

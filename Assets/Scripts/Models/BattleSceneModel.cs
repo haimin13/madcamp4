@@ -54,6 +54,8 @@ public class BattleSceneModel : MonoBehaviour
         enemyStatus.tmpSpeed = enemy.stats.speed;
         enemyStatus.isAlive = true;
         enemyStatus.healCount = 0;
+        enemyStatus.controlPower = 0;
+        enemyStatus.controlName = "정상";
         enemySkills = enemy.skills;
     }
     public void LoadTypeChart()
