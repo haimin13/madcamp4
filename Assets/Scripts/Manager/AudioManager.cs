@@ -18,6 +18,7 @@ public class AudioManager : MonoBehaviour
     public AudioClip projectile;
     public AudioClip laser;
     public AudioClip log;
+    public AudioClip stun;
 
     private static AudioManager instance;
     public static AudioManager Instance
@@ -67,7 +68,7 @@ public class AudioManager : MonoBehaviour
         projectile = Resources.Load<AudioClip>("Projectile");
         laser = Resources.Load<AudioClip>("Laser");
         log = Resources.Load<AudioClip>("Log");
-
+        stun = Resources.Load<AudioClip>("Stun");
     }
 
     // 효과음 재생용 예시 메서드
@@ -145,5 +146,9 @@ public class AudioManager : MonoBehaviour
     public void PlayLog()
     {
         audioSource.PlayOneShot(log);
+    }
+    public void PlayStun()
+    {
+        audioSource.PlayOneShot(stun);
     }
 }
