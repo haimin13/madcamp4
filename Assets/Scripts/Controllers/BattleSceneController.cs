@@ -186,6 +186,11 @@ public class BattleSceneController : MonoBehaviour
         {
             destination.currentHp = 0;
             destination.isAlive = false;
+            if (destination != model.enemyStatus) // destination이 enemy가 아니라면 player임
+            {
+                model.isDead = true;
+                StartCoroutine(player.CharacterDeadAnimation()); // 죽는 애니메이션도 여기서 호출
+            }
             yield return view.SetLogtextAndWait($"{destination.charaName}은(는) 쓰러졌다!");
             CheckGameState();
         }
