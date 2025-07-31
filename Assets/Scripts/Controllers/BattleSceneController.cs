@@ -20,7 +20,7 @@ public class BattleSceneController : MonoBehaviour
         {
             GameDataManager.Instance.currentRound = 1;
             Debug.Log(GameDataManager.Instance.currentRound);
-            GameDataManager.Instance.selectedChara = 0;
+            GameDataManager.Instance.selectedChara = 2;
             GameDataManager.Instance.runId = "run_a85f192c-c763-4f1c-a0ce-234c6a430f3d";
 
             // save

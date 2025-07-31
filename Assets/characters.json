@@ -208,12 +208,12 @@
             "description": "세상과 단절된 채 집 안에서 자신만의 세계를 구축한 은둔형 캐릭터입니다. 의외의 지식과 비범한 생활 스킬로 상대를 제압합니다.",
             "image_url": "/static/images/image_bd802f7f-8ca1-4f6b-a449-774143c52d17.png",
             "stats": {
-                "hp": 100,
-                "atk": 60,
-                "def": 70,
-                "sp_atk": 120,
-                "sp_def": 80,
-                "speed": 70
+                "hp": 10000,
+                "atk": 0,
+                "def": 7000,
+                "sp_atk": 0,
+                "sp_def": 8000,
+                "speed": 1000
             },
             "character_type": "현대형 은둔자",
             "skills": [
