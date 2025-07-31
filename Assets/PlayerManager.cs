@@ -16,6 +16,7 @@ public class PlayerManager : MonoBehaviour
     private Vector3 originalPosition;
     private SpriteRenderer characterSprite;
     private Material effectMaterial;
+    private Color controlColor = Color.green;
     void Start()
     {
         originalPosition = player.transform.position;
@@ -47,7 +48,7 @@ public class PlayerManager : MonoBehaviour
                 yield return RankCoroutine(skill.base_power / 10 % 10 == 0);
                 break;
             case "제어":
-                //StartCoroutine(ControlCoroutine(skill.shake_effect));
+                yield return ControlCoroutine(skill.shake_effect);
                 break;
             case "회복":
                 yield return HealCoroutine(skill.shake_effect);
@@ -294,6 +295,21 @@ public class PlayerManager : MonoBehaviour
         main.startColor = color;
         healParticle.Play();
         yield return BlinkCoroutine(color, 1, duration);
+    }
+
+    public IEnumerator ControlCoroutine(ShakeEffect effectData = null)
+    {
+        float duration = 1f;
+        if (effectData != null)
+        {
+            if (ColorUtility.TryParseHtmlString(effectData.particle_color, out Color tryColor))
+            {
+                controlColor = tryColor;
+            }
+        }
+        //AudioManager.Instance.PlayControl(); 사운드 추가해줘
+        Debug.Log($"제어 애니메이션 재생: 색상 {controlColor}");
+        yield return BlinkCoroutine(controlColor, 1, duration);
     }
 
     /// <summary>
