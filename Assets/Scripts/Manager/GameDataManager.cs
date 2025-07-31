@@ -106,13 +106,39 @@ public class GameDataManager : MonoBehaviour
             runId = res.run_id;
             var charaList = res.enemies;
             CharacterSheet.Instance.enemies = charaList;
-            UpdateCharacterStatus();
+            ResetCharacterStatus();
             SceneManager.LoadScene("StageListScene");
         }, (error) =>
         {
             Debug.Log("적 정보 받아오기 실패!");
             Debug.Log(error);
         }));
+    }
+    public void ResetCharacterStatus()
+    {
+        charaStatus = new List<CurrentCharacterStatus>();
+        List<CharacterData> characters = CharacterSheet.Instance.characters;
+        for (int i = 0; i < characters.Count; i++)
+        {
+            CurrentCharacterStatus status = new CurrentCharacterStatus();
+            status.charaName = characters[i].character_name;
+            status.charaType = characters[i].character_type;
+            status.charaImageUrl = characters[i].image_url;
+            status.debuff = "정상";
+            status.duration = 0;
+            status.maxHp = characters[i].stats.hp + 100; // 체력 수치
+            status.currentHp = status.maxHp;
+            status.tmpAtk = characters[i].stats.atk;
+            status.tmpDef = characters[i].stats.def;
+            status.tmpSpAtk = characters[i].stats.sp_atk;
+            status.tmpSpDef = characters[i].stats.sp_def;
+            status.tmpSpeed = characters[i].stats.speed;
+            status.isAlive = true;
+            status.healCount = 0;
+            status.controlPower = 0;
+            status.controlName = "정상";
+            charaStatus.Add(status);
+        }
     }
     public void UpdateCharacterStatus(List<CurrentCharacterStatus> newStatus = null)
     {
@@ -146,7 +172,6 @@ public class GameDataManager : MonoBehaviour
         {
             charaStatus = newStatus;
         }
-        else Debug.Log("Invalid idx");
     }
 
     public void GetRoundInfo(System.Action onComplete = null, System.Action onFail = null)
