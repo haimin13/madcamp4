@@ -39,6 +39,8 @@ public class BattleSceneController : MonoBehaviour
         model.LoadCurrentStatus();
         model.LoadTypeChart();
 
+        AudioManager.Instance.PlayBGM(model.currentRound);
+
         view.ShowSkills(model.charaSkills);
         view.SetStatusPanel(model.charaStatus[model.currentChara], model.enemyStatus);
 

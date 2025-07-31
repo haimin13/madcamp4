@@ -82,6 +82,7 @@ public class StageListSceneManager : MonoBehaviour
             {
                 if (isOn)
                 {
+                    AudioManager.Instance.PlayClickSound();
                     GameDataManager.Instance.selectedChara = capturedIndex;
                     Debug.Log($"selectedChara = {capturedIndex}");
                 }
@@ -118,6 +119,7 @@ public class StageListSceneManager : MonoBehaviour
     }
     void ShowDetail()
     {
+        AudioManager.Instance.PlayOpenSound();
         detailPanel.SetActive(true);
         if (CharacterSheet.Instance != null)
         {
@@ -130,11 +132,13 @@ public class StageListSceneManager : MonoBehaviour
 
     void ClosePanel()
     {
+        AudioManager.Instance.PlayCloseSound();
         detailPanel.SetActive(false);
     }
 
     void StartBattle()
     {
+        AudioManager.Instance.PlayClickSound();
         if (GameDataManager.Instance != null)
         {
             int selected = GameDataManager.Instance.selectedChara;

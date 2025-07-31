@@ -80,6 +80,7 @@ public class PlayerManager : MonoBehaviour
     /// </summary>
     public void PlayHitAnimation()
     {
+        AudioManager.Instance.PlayHit();
         StartCoroutine(BlinkCoroutine(Color.red, 3, 0.5f));
     }
 
@@ -89,6 +90,7 @@ public class PlayerManager : MonoBehaviour
     {
         Debug.Log($"Shake 애니메이션 재생: 파티클 색상 {effectData.particle_color}");
 
+        AudioManager.Instance.PlayShake();
         float duration = 0.5f;
         float magnitude = 0.1f;
         float elapsed = 0.0f;
@@ -113,6 +115,7 @@ public class PlayerManager : MonoBehaviour
 
         Debug.Log($"투사체 애니메이션 재생: {effectData.shape} 모양 {effectData.count}개, 색상 {effectData.color}");
         yield return new WaitForSeconds(0.7f); // 애니메이션 시작 전 잠시 대기
+        
         for (int i = 0; i < effectData.count; i++)
         {
             // 캐릭터 주변에 약간의 랜덤한 오프셋을 주어 투사체를 생성합니다.
@@ -131,7 +134,8 @@ public class PlayerManager : MonoBehaviour
             // ProjectileManager에 목표와 속도를 알려줍니다.
             ProjectileManager projectileManager = projectileGO.GetComponent<ProjectileManager>();
             if (projectileManager != null)
-            {
+            {   
+                AudioManager.Instance.PlayProjectile();
                 projectileManager.Initialize(target, 30f, effectData.shape); // 10f는 투사체 속도
             }
 
@@ -155,6 +159,7 @@ public class PlayerManager : MonoBehaviour
         }
 
         Debug.Log($"레이저 애니메이션 재생: {effectData.origin}에서 발사, 굵기 {effectData.thickness}, 색상 {effectData.color}");
+        AudioManager.Instance.PlayLaser();
 
         // 1. 레이저 프리팹을 생성합니다.
         GameObject laserGO = Instantiate(laserPrefab, Vector3.zero, Quaternion.identity);
@@ -245,6 +250,10 @@ public class PlayerManager : MonoBehaviour
     private IEnumerator RankCoroutine(bool isStatUp)
     {
         Debug.Log($"랭크 애니메이션 재생: {(isStatUp ? "상승" : "하락")}");
+
+        if (isStatUp) AudioManager.Instance.PlayRankUp();
+        else AudioManager.Instance.PlayRankDown();
+
         float animationDuration = 1f; // 애니메이션 지속 시간
         effectMaterial.SetColor("_EffectColor", isStatUp ? statUpColor : statDownColor);
         float scrollDirection = isStatUp ? 1.0f : -1.0f;
@@ -274,6 +283,7 @@ public class PlayerManager : MonoBehaviour
     private IEnumerator HealCoroutine(ShakeEffect effectData)
     {
         Debug.Log($"회복 애니메이션 재생: 파티클 색상 {effectData.particle_color}");
+        AudioManager.Instance.PlayHeal();
         float duration = 1f;
         Color color = Color.green;
         if (ColorUtility.TryParseHtmlString(effectData.particle_color, out Color tryColor))

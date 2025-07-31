@@ -8,6 +8,8 @@ using UnityEngine.SceneManagement;
 
 public class ChampionCreateSceneManager : MonoBehaviour
 {
+    public AudioManager audioManager;
+    public AudioClip clickSound;
     public Button OKButton;
     public Button sendButton;
     public Button nextButton;
@@ -23,6 +25,7 @@ public class ChampionCreateSceneManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        
         GameDataManager.Instance.ResetChampions();
         OKButton.onClick.AddListener(OnOKButtonClicked);
         sendButton.onClick.AddListener(OnSendButtonClicked);
@@ -46,11 +49,13 @@ public class ChampionCreateSceneManager : MonoBehaviour
 
     void OnOKButtonClicked()
     {
+        AudioManager.Instance.PlayClickSound();
         storyPanel.SetActive(false);  // 비활성화
     }
 
     void OnSendButtonClicked()
     {
+        AudioManager.Instance.PlayClickSound();
         // 입력 처리 json화
         string desc = champDescription.text;
         
@@ -107,6 +112,7 @@ public class ChampionCreateSceneManager : MonoBehaviour
     }
     void OnNextButtonClicked()
     {
+        AudioManager.Instance.PlayClickSound();
         createdCount += 1;
         foreach (var text in countText)
         {
@@ -116,6 +122,7 @@ public class ChampionCreateSceneManager : MonoBehaviour
     }
     void OnStartButtonClicked()
     {
+        AudioManager.Instance.PlayClickSound();
         Debug.Log("OnStartButtonClicked");
         if (GameDataManager.Instance != null)
         {

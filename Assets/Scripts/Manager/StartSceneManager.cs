@@ -21,6 +21,7 @@ public class StartSceneManager : MonoBehaviour
     }
     void StartButtonClicked()
     {
+        AudioManager.Instance.PlayClickSound();
         SceneManager.LoadScene("ChampCreateScene");
     }
 }
