@@ -18,7 +18,7 @@
                 "skill_name": "멍때리기",
                 "description": "상대방을 멍하게 만들어 잠시 행동 불능으로 만듭니다.",
                 "base_power": 80,
-                "damage_type": "제어",
+                "damage_type": "선공_물리",
                 "skill_type": "정면 돌파",
                 "visual_effect_type": "Shake",
                 "shake_effect": {

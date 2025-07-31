@@ -72,17 +72,22 @@ public class BattleSceneModel : MonoBehaviour
     }
     public int CalculateDamage(Skill casted, int atkStat, int spAtkStat, int defStat, int spDefStat, string defType)
     {
+        float priorityMultiplier = 0.5f;
         float atk = casted.base_power / 100f;
         float def = 0;
-        if (casted.damage_type == "물리")
+        if (casted.damage_type.StartsWith("선공"))
         {
-            atk = atk * atkStat; // 임시
+            atk = atk * priorityMultiplier;
+        }
+        if (casted.damage_type.EndsWith("물리"))
+        {
+            atk = atk * atkStat;
             def = defStat;
         }
         else
         {
             float multiplier = typeChart[casted.skill_type][defType];
-            atk =  atk * spAtkStat * multiplier; // 임시
+            atk = atk * spAtkStat * multiplier;
             def = spDefStat;
         }
         return (int)(atk * 100f / (def + 50f));
