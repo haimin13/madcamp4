@@ -339,7 +339,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57c7f75e08448094b81e08f166a7cb7c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentRound: 1
+  currentRound: 0
   selectedChara: 99
   runId: 
   apiRequester: {fileID: 0}

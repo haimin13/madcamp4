@@ -19,6 +19,8 @@ public class AudioManager : MonoBehaviour
     public AudioClip laser;
     public AudioClip log;
     public AudioClip control;
+    public AudioClip gameOver;
+    public AudioClip stageClear;
 
     private static AudioManager instance;
     public static AudioManager Instance
@@ -69,6 +71,8 @@ public class AudioManager : MonoBehaviour
         laser = Resources.Load<AudioClip>("Laser");
         log = Resources.Load<AudioClip>("Log");
         control = Resources.Load<AudioClip>("Control");
+        gameOver = Resources.Load<AudioClip>("GameOver");
+        stageClear = Resources.Load<AudioClip>("StageClear");
     }
 
     // 효과음 재생용 예시 메서드
@@ -150,5 +154,15 @@ public class AudioManager : MonoBehaviour
     public void PlayControl()
     {
         audioSource.PlayOneShot(control);
+    }
+    public void PlayClear()
+    {
+        Debug.Log("PlayClear");
+        audioSource.PlayOneShot(stageClear);
+    }
+    public void PlayGameOver()
+    {
+        audioSource.clip = gameOver;
+        audioSource.Play();
     }
 }

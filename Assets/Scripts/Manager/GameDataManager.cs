@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using Newtonsoft.Json;
+using UnityEngine.SceneManagement;
 
 public class EnemyListResponse
 {
@@ -105,6 +106,8 @@ public class GameDataManager : MonoBehaviour
             runId = res.run_id;
             var charaList = res.enemies;
             CharacterSheet.Instance.enemies = charaList;
+            UpdateCharacterStatus();
+            SceneManager.LoadScene("StageListScene");
         }, (error) =>
         {
             Debug.Log("적 정보 받아오기 실패!");

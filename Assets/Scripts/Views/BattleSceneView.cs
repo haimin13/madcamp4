@@ -281,6 +281,8 @@ public class BattleSceneView : MonoBehaviour
 
     private IEnumerator ShowGameOverCoroutine()
     {
+        AudioManager.Instance.StopBGM();
+        AudioManager.Instance.PlayGameOver();
         // 1. 패널을 활성화하고, 처음에는 완전히 투명하게 설정합니다.
         gameOverPanel.SetActive(true);
         gameOverCanvasGroup.alpha = 0f;
@@ -311,6 +313,7 @@ public class BattleSceneView : MonoBehaviour
     public void ShowWinPanel()
     {
         winPanel.SetActive(true);
+        AudioManager.Instance.PlayClear();
         nextRoundButton.onClick.AddListener(NextButtonClicked);
     }
     public void NextButtonClicked()

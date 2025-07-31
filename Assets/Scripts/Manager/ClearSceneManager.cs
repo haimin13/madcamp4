@@ -14,11 +14,11 @@ public class ClearSceneManager : MonoBehaviour
     public GameObject charaPanel;
     public Button sendButton;
     public List<CharacterData> characters;
-    bool debugMode;
+    bool debug;
     // Start is called before the first frame update
     void Start()
     {
-        debugMode = false;
+        debug = false;
 
         AudioManager.Instance.StopBGM();
         ShowCharacters();
@@ -27,7 +27,7 @@ public class ClearSceneManager : MonoBehaviour
 
     void ShowCharacters()
     {
-        if (debugMode)
+        if (debug)
         {
             GameDataManager.Instance.LoadCharacters();
             GameDataManager.Instance.runId = "run_a85f192c-c763-4f1c-a0ce-234c6a430f3d";

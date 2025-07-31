@@ -126,9 +126,8 @@ public class ChampionCreateSceneManager : MonoBehaviour
         {
             Debug.Log("GameDataManager.Instance != null");
             GameDataManager.Instance.GetEnemiesData();
-            GameDataManager.Instance.UpdateCharacterStatus(null);
+            // 내부에서 씬 전환함
         }
-        SceneManager.LoadScene("StageListScene");
     }
     void Update()
     {
