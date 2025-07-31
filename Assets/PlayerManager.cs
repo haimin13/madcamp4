@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 
 public class PlayerManager : MonoBehaviour
@@ -9,8 +10,12 @@ public class PlayerManager : MonoBehaviour
     public GameObject projectilePrefab;
     public GameObject laserPrefab;
     public bool isEnemy = false;
+    public Color statUpColor = Color.red;
+    public Color statDownColor = Color.blue;
+    public ParticleSystem healParticle;
     private Vector3 originalPosition;
     private SpriteRenderer characterSprite;
+    private Material effectMaterial;
     void Start()
     {
         originalPosition = player.transform.position;
@@ -18,6 +23,8 @@ public class PlayerManager : MonoBehaviour
     public void setImage(string spriteurl)
     {
         characterSprite = player.GetComponent<SpriteRenderer>();
+        effectMaterial = characterSprite.material;
+        effectMaterial.SetFloat("_Alpha", 0f);
         // Assuming you have a method to set the player's image
         // This is a placeholder for the actual implementation
         Debug.Log("Setting player image: " + spriteurl);
@@ -30,23 +37,40 @@ public class PlayerManager : MonoBehaviour
     /// <summary>
     /// 스킬 데이터에 따라 적절한 애니메이션 코루틴을 실행합니다.
     /// </summary>
-    public void PlaySkillAnimation(Skill skill)
+    public IEnumerator PlaySkillAnimation(Skill skill)
     {
-        Debug.Log($"스킬 애니메이션 재생: {skill.skill_name}, 타입: {skill.visual_effect_type}");
+        Debug.Log($"스킬 애니메이션 재생: {skill.skill_name}, 타입: {skill.visual_effect_type}, 공격종류: {skill.damage_type}");
         // 스킬의 시각 효과 타입에 따라 다른 코루틴을 호출합니다.
-        switch (skill.visual_effect_type)
+        switch (skill.damage_type)
         {
-            case "Shake":
-                // Shake 효과에 필요한 데이터를 넘겨줍니다.
-                StartCoroutine(ShakeCoroutine(skill.shake_effect));
+            case "랭크":
+                yield return RankCoroutine(skill.base_power / 10 % 10 == 0);
                 break;
-            case "Projectile":
-                // Projectile 효과에 필요한 데이터를 넘겨줍니다.
-                StartCoroutine(ProjectileCoroutine(skill.projectile_effect));
+            case "제어":
+                //StartCoroutine(ControlCoroutine(skill.shake_effect));
                 break;
-            case "Laser":
-                // Laser 효과에 필요한 데이터를 넘겨줍니다.
-                StartCoroutine(LaserCoroutine(skill.laser_effect));
+            case "회복":
+                yield return HealCoroutine(skill.shake_effect);
+                break;
+            case "방어":
+                //StartCoroutine(DefenseCoroutine(skill.shake_effect));
+                break;
+            default:
+                switch (skill.visual_effect_type)
+                {
+                    case "Shake":
+                        // Shake 효과에 필요한 데이터를 넘겨줍니다.
+                        yield return ShakeCoroutine(skill.shake_effect);
+                        break;
+                    case "Projectile":
+                        // Projectile 효과에 필요한 데이터를 넘겨줍니다.
+                        yield return ProjectileCoroutine(skill.projectile_effect);
+                        break;
+                    case "Laser":
+                        // Laser 효과에 필요한 데이터를 넘겨줍니다.
+                        yield return LaserCoroutine(skill.laser_effect);
+                        break;
+                }
                 break;
         }
     }
@@ -56,7 +80,7 @@ public class PlayerManager : MonoBehaviour
     /// </summary>
     public void PlayHitAnimation()
     {
-        StartCoroutine(BlinkRedCoroutine(3, 0.5f));
+        StartCoroutine(BlinkCoroutine(Color.red, 3, 0.5f));
     }
 
     // --- 각 효과별 코루틴 ---
@@ -218,19 +242,91 @@ public class PlayerManager : MonoBehaviour
         Destroy(laserGO);
     }
 
-    private IEnumerator BlinkRedCoroutine(int blinkCount, float totalDuration)
+    private IEnumerator RankCoroutine(bool isStatUp)
     {
-        Color originalColor = characterSprite.color;
-        Color hitColor = Color.red;
-        float blinkDuration = totalDuration / (blinkCount * 2);
+        Debug.Log($"랭크 애니메이션 재생: {(isStatUp ? "상승" : "하락")}");
+        float animationDuration = 1f; // 애니메이션 지속 시간
+        effectMaterial.SetColor("_EffectColor", isStatUp ? statUpColor : statDownColor);
+        float scrollDirection = isStatUp ? 1.0f : -1.0f;
+
+        float elapsedTime = 0f;
+
+        // 2. 코루틴을 통해 시간에 따라 셰이더 변수 값을 변경합니다.
+        while (elapsedTime < animationDuration)
+        {
+            elapsedTime += Time.deltaTime;
+            float progress = elapsedTime / animationDuration;
+
+            // 페이드 인/아웃: 포물선 형태로 알파값을 조절 (0 -> 1 -> 0)
+            float alpha = 8.0f * progress * progress * (1.0f - progress);
+            effectMaterial.SetFloat("_Alpha", alpha);
+
+            // 스크롤: progress에 따라 물결이 위 또는 아래로 움직임
+            effectMaterial.SetFloat("_ScrollY", -progress * scrollDirection);
+            
+            yield return null;
+        }
+
+        // 3. 애니메이션이 끝나면 효과를 완전히 끕니다.
+        effectMaterial.SetFloat("_Alpha", 0f);
+    }
+
+    private IEnumerator HealCoroutine(ShakeEffect effectData)
+    {
+        Debug.Log($"회복 애니메이션 재생: 파티클 색상 {effectData.particle_color}");
+        float duration = 1f;
+        Color color = Color.green;
+        if (ColorUtility.TryParseHtmlString(effectData.particle_color, out Color tryColor))
+        {
+            color = tryColor;
+        }
+        var main = healParticle.main;
+        main.startColor = color;
+        healParticle.Play();
+        yield return BlinkCoroutine(color, 1, duration);
+    }
+
+    /// <summary>
+    /// 셰이더의 _FlashAmount 값을 조절하여 점멸 효과를 만드는 코루틴입니다.
+    /// </summary>
+    private IEnumerator BlinkCoroutine(Color flashColor, int blinkCount, float totalDuration)
+    {
+        if (effectMaterial == null)
+        {
+            Debug.LogError("효과를 적용할 머티리얼이 없습니다!");
+            yield break; // 코루틴을 즉시 종료합니다.
+        }
+
+        // 1. C# 스크립트에서 셰이더의 _FlashColor 값을 원하는 색으로 설정합니다.
+        effectMaterial.SetColor("_FlashColor", flashColor);
+
+        float singleBlinkDuration = totalDuration / blinkCount;
 
         for (int i = 0; i < blinkCount; i++)
         {
-            characterSprite.color = hitColor;
-            yield return new WaitForSeconds(blinkDuration);
-            characterSprite.color = originalColor;
-            yield return new WaitForSeconds(blinkDuration);
+            float elapsedTime = 0f;
+            // 부드럽게 밝아지는 효과
+            while (elapsedTime < singleBlinkDuration / 2)
+            {
+                float progress = elapsedTime / (singleBlinkDuration / 2);
+                effectMaterial.SetFloat("_FlashAmount", Mathf.Lerp(0f, 0.8f, progress));
+                elapsedTime += Time.deltaTime;
+                yield return null;
+            }
+
+            elapsedTime = 0f;
+            // 부드럽게 어두워지는 효과
+            while (elapsedTime < singleBlinkDuration / 2)
+            {
+                float progress = elapsedTime / (singleBlinkDuration / 2);
+                effectMaterial.SetFloat("_FlashAmount", Mathf.Lerp(0.8f, 0f, progress));
+                elapsedTime += Time.deltaTime;
+                yield return null;
+            }
         }
+
+        // 애니메이션이 끝난 후, 확실하게 효과를 끕니다.
+        effectMaterial.SetFloat("_FlashAmount", 0.0f);
     }
     public IEnumerator CharacterChangeCoroutine(string newSpriteUrl)
     {

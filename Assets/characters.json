@@ -1,106 +1,74 @@
 {
     "characters": [
         {
-            "character_id": "",
-            "character_name": "파워풀 기린",
-            "description": "거대한 몸에서 뿜어져 나오는 압도적인 힘으로 적을 제압하는 기린 전사입니다.",
-            "image_url": "/static/images/image_bd802f7f-8ca1-4f6b-a449-774143c52d17.png",
+            "character_name": "별의 커비",
+            "description": "모든것을 빨아들이고 카피할 수 있지만 오늘은 이상한 능력만 가져온 분홍색 푸딩.",
+            "image_url": "/static/images/image_69428d42-41a5-45d2-88fd-ebd81cdf6ea0.png",
             "stats": {
-                "hp": 9000,
-                "atk": 120000,
-                "def": 800,
-                "sp_atk": 10000,
-                "sp_def": 6000,
-                "speed": 500
+                "hp": 120,
+                "atk": 50,
+                "def": 110,
+                "sp_atk": 50,
+                "sp_def": 110,
+                "speed": 60
             },
             "character_type": "천둥 발굽",
             "skills": [
                 {
-                    "skill_name": "우레 발굽",
-                    "description": "온몸의 무게를 실어 적에게 강력한 발굽 공격을 가해 대지를 뒤흔듭니다.",
-                    "base_power": 100,
-                    "damage_type": "물리",
-                    "skill_type": "정면 돌파",
-                    "visual_effect_type": "Shake",
-                    "shake_effect": {
-                        "particle_color": "#A0522D"
-                    },
-                    "projectile_effect": {
-                        "shape": "",
-                        "count": 0,
-                        "color": ""
-                    },
-                    "laser_effect": {
-                        "origin": "",
-                        "thickness": 1,
-                        "color": ""
-                    }
+                "skill_name": "멍때리기",
+                "description": "상대방을 멍하게 만들어 잠시 행동 불능으로 만듭니다.",
+                "base_power": 80,
+                "damage_type": "제어",
+                "skill_type": "정면 돌파",
+                "visual_effect_type": "Shake",
+                "shake_effect": {
+                    "particle_color": "#A020F0"
+                },
+                "projectile_effect": null,
+                "laser_effect": null
                 },
                 {
-                    "skill_name": "초원 투창",
-                    "description": "초원의 기운을 응축한 창을 던져 원거리의 적을 정확하게 공격합니다.",
-                    "base_power": 90,
-                    "damage_type": "물리",
-                    "skill_type": "원거리 사격",
-                    "visual_effect_type": "Projectile",
-                    "shake_effect": {
-                        "particle_color": ""
-                    },
-                    "projectile_effect": {
-                        "shape": "막대기",
-                        "count": 1,
-                        "color": "#7CFC00"
-                    },
-                    "laser_effect": {
-                        "origin": "",
-                        "thickness": 1,
-                        "color": ""
-                    }
+                "skill_name": "단단해지기",
+                "description": "자신의 방어력을 2랭크 상승시킵니다.",
+                "base_power": 202,
+                "damage_type": "랭크",
+                "skill_type": "원거리 사격",
+                "visual_effect_type": "Shake",
+                "shake_effect": {
+                    "particle_color": "#00BFFF"
+                },
+                "projectile_effect": null,
+                "laser_effect": null
                 },
                 {
-                    "skill_name": "광휘의 시선",
-                    "description": "높은 시야에서 순수한 빛의 줄기를 발사하여 지상의 적들을 불태웁니다.",
-                    "base_power": 110,
-                    "damage_type": "특수",
-                    "skill_type": "천상 광선",
-                    "visual_effect_type": "Laser",
-                    "shake_effect": {
-                        "particle_color": ""
-                    },
-                    "projectile_effect": {
-                        "shape": "",
-                        "count": 0,
-                        "color": ""
-                    },
-                    "laser_effect": {
-                        "origin": "TopToBottom",
-                        "thickness": 2,
-                        "color": "#FFFF00"
-                    }
+                "skill_name": "어설픈 방어",
+                "description": "예측할 수 없는 움직임으로 상대방의 공격을 방어합니다.",
+                "base_power": 90,
+                "damage_type": "방어",
+                "skill_type": "천상 광선",
+                "visual_effect_type": "Shake",
+                "shake_effect": {
+                    "particle_color": "#32CD32"
+                },
+                "projectile_effect": null,
+                "laser_effect": null
                 },
                 {
-                    "skill_name": "질주하는 그림자",
-                    "description": "강력한 근력을 이용해 전방으로 빠르게 돌진하며 적들을 들이받아 피해를 줍니다.",
-                    "base_power": 80,
-                    "damage_type": "물리",
-                    "skill_type": "돌진 기동",
-                    "visual_effect_type": "Shake",
-                    "shake_effect": {
-                        "particle_color": "#36454F"
-                    },
-                    "projectile_effect": {
-                        "shape": "",
-                        "count": 0,
-                        "color": ""
-                    },
-                    "laser_effect": {
-                        "origin": "",
-                        "thickness": 2,
-                        "color": ""
-                    }
+                "skill_name": "실수투성이 치유",
+                "description": "어딘가 어설프지만 효과적으로 자신의 체력을 회복합니다.",
+                "base_power": 100,
+                "damage_type": "회복",
+                "skill_type": "돌진 기동",
+                "visual_effect_type": "Shake",
+                "shake_effect": {
+                    "particle_color": "#FF69B4"
+                },
+                "projectile_effect": null,
+                "laser_effect": null
                 }
-            ]
-        },
+            ],
+            "id": "0f6e2943-845b-46cd-9fcd-dd745077368d"
+            },
         {
             "character_id": "",
             "character_name": "에어컨 디액티베이터",
@@ -208,12 +176,12 @@
             "description": "세상과 단절된 채 집 안에서 자신만의 세계를 구축한 은둔형 캐릭터입니다. 의외의 지식과 비범한 생활 스킬로 상대를 제압합니다.",
             "image_url": "/static/images/image_bd802f7f-8ca1-4f6b-a449-774143c52d17.png",
             "stats": {
-                "hp": 10000,
-                "atk": 0,
-                "def": 7000,
-                "sp_atk": 0,
-                "sp_def": 8000,
-                "speed": 1000
+                "hp": 100,
+                "atk": 60,
+                "def": 1000,
+                "sp_atk": 1200,
+                "sp_def": 80,
+                "speed": 70
             },
             "character_type": "현대형 은둔자",
             "skills": [
