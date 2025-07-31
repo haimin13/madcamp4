@@ -53,6 +53,7 @@ public class ChampionCreateSceneManager : MonoBehaviour
     {
         // 입력 처리 json화
         string desc = champDescription.text;
+        
         Debug.Log(desc);
 
         loadingPanel.SetActive(true);

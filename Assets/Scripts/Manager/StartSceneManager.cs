@@ -11,7 +11,7 @@ public class StartSceneManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        loginButton.onClick.AddListener(Login);
+        loginButton.onClick.AddListener(StartButtonClicked);
     }
 
     // Update is called once per frame
@@ -19,15 +19,8 @@ public class StartSceneManager : MonoBehaviour
     {
 
     }
-    void Login()
+    void StartButtonClicked()
     {
-        // api 요청
-        StartCoroutine(APIRequester.Instance.SendJsonRequest("/api/auth/guest", "POST", null, null, (response) =>
-        {
-            SceneManager.LoadScene("ChampCreateScene");
-        }, (error) =>
-        {
-            
-        }));
+        SceneManager.LoadScene("ChampCreateScene");
     }
 }
