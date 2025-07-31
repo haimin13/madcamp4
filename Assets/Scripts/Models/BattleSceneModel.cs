@@ -81,7 +81,7 @@ public class BattleSceneModel : MonoBehaviour
         {
             atk = atk * priorityMultiplier;
         }
-        if (casted.damage_type.EndsWith("물리"))
+        if (casted.damage_type.EndsWith("일반"))
         {
             atk = atk * atkStat;
             def = defStat;
