@@ -18,7 +18,7 @@ public class ClearSceneManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        debugMode = true;
+        debugMode = false;
 
         AudioManager.Instance.StopBGM();
         ShowCharacters();

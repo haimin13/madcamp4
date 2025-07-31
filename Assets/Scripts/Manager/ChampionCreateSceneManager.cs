@@ -8,8 +8,6 @@ using UnityEngine.SceneManagement;
 
 public class ChampionCreateSceneManager : MonoBehaviour
 {
-    public AudioManager audioManager;
-    public AudioClip clickSound;
     public Button OKButton;
     public Button sendButton;
     public Button nextButton;
@@ -36,10 +34,10 @@ public class ChampionCreateSceneManager : MonoBehaviour
         storyPanel.SetActive(true);
         loadingPanel.SetActive(false);
 
-        bool DebugMode = true;
+        bool debug = false;
 
         //Debug Mode
-        if (DebugMode)
+        if (debug)
         {
             GameDataManager.Instance.LoadCharacters();
             OnStartButtonClicked();
