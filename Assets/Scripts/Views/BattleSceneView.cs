@@ -61,6 +61,7 @@ public class BattleSceneView : MonoBehaviour
     void OnSkillClicked(int btnIndex)
     {
         Debug.Log($"스킬 {btnIndex} 클릭!");
+        AudioManager.Instance.PlayClickSound();
         SetSkillButtonsInteractable(false);
         controller.SelectSkill(btnIndex);
     }
@@ -116,6 +117,7 @@ public class BattleSceneView : MonoBehaviour
 
     public IEnumerator SetLogtextAndWait(string sentence = " ", float wait = 1.0f)
     {
+        AudioManager.Instance.PlayLog();
         first = second;
         second = sentence;
         logText.text = first + "\n" + second;
@@ -123,12 +125,14 @@ public class BattleSceneView : MonoBehaviour
     }
     public void SetLogtext(string sentence = " ")
     {
+        AudioManager.Instance.PlayLog();
         first = second;
         second = sentence;
         logText.text = first + "\n" + second;
     }
     public void OnSwitchPanelButtonClicked()
     {
+        AudioManager.Instance.PlayOpenSound();
         ShowSwitchPanel();
     }
     public void ShowSwitchPanel()
@@ -214,11 +218,13 @@ public class BattleSceneView : MonoBehaviour
 
     public void OnSwitchButtonClicked()
     {
+        AudioManager.Instance.PlayClickSound();
         controller.SwitchCharacter();
     }
 
     public void OnCharaClicked(int idx)
     {
+        AudioManager.Instance.PlayClickSound();
         Debug.Log("OnCharaClicked");
         controller.ChangeCandidate(idx);
     }
@@ -248,6 +254,7 @@ public class BattleSceneView : MonoBehaviour
     }
     public void OnCancelButtonClicked()
     {
+        AudioManager.Instance.PlayCloseSound();
         if (model.isDead)
         {
             Debug.Log("you have to change!");
@@ -296,12 +303,19 @@ public class BattleSceneView : MonoBehaviour
     }
     public void restartGame()
     {
+        AudioManager.Instance.PlayClickSound();
+        AudioManager.Instance.StopBGM();
         // TODO 케릭터 만들어진거 삭제하는 코드 만들기
         SceneManager.LoadScene("ChampCreateScene");
     }
     public void ShowWinPanel()
     {
         winPanel.SetActive(true);
-        nextRoundButton.onClick.AddListener(controller.GoNextRound);
+        nextRoundButton.onClick.AddListener(NextButtonClicked);
+    }
+    public void NextButtonClicked()
+    {
+        AudioManager.Instance.PlayClickSound();
+        controller.GoNextRound();
     }
 }

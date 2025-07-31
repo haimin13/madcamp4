@@ -20,6 +20,7 @@ public class ClearSceneManager : MonoBehaviour
     {
         debugMode = true;
 
+        AudioManager.Instance.StopBGM();
         ShowCharacters();
         sendButton.onClick.AddListener(SendCharacters);
     }

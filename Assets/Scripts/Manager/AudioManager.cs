@@ -17,6 +17,7 @@ public class AudioManager : MonoBehaviour
     public AudioClip shake;
     public AudioClip projectile;
     public AudioClip laser;
+    public AudioClip log;
 
     private static AudioManager instance;
     public static AudioManager Instance
@@ -54,7 +55,7 @@ public class AudioManager : MonoBehaviour
         }
         click = Resources.Load<AudioClip>("ClickButton");
         showPanel = Resources.Load<AudioClip>("ShowPanel");
-        closePanel = Resources.Load<AudioClip>("ClosePanel");;
+        closePanel = Resources.Load<AudioClip>("ClosePanel"); ;
         BGM1 = Resources.Load<AudioClip>("round1");
         BGM4 = Resources.Load<AudioClip>("round4");
         BGM7 = Resources.Load<AudioClip>("round7");
@@ -65,6 +66,7 @@ public class AudioManager : MonoBehaviour
         shake = Resources.Load<AudioClip>("Shake");
         projectile = Resources.Load<AudioClip>("Projectile");
         laser = Resources.Load<AudioClip>("Laser");
+        log = Resources.Load<AudioClip>("Log");
 
     }
 
@@ -139,5 +141,9 @@ public class AudioManager : MonoBehaviour
     public void PlayShake()
     {
         audioSource.PlayOneShot(shake);
+    }
+    public void PlayLog()
+    {
+        audioSource.PlayOneShot(log);
     }
 }
