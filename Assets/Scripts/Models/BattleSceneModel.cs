@@ -53,6 +53,7 @@ public class BattleSceneModel : MonoBehaviour
         enemyStatus.tmpSpDef = enemy.stats.sp_def;
         enemyStatus.tmpSpeed = enemy.stats.speed;
         enemyStatus.isAlive = true;
+        enemyStatus.healCount = 0;
         enemySkills = enemy.skills;
     }
     public void LoadTypeChart()
@@ -66,7 +67,7 @@ public class BattleSceneModel : MonoBehaviour
     public int RankUpStat(int origStat, int step)
     {
         int k = 2;
-        float weight = (k + Math.Max(0, step)) / (k + Math.Min(0, step));
+        float weight = (k + Math.Max(0, step)) / (k - Math.Min(0, step));
         return (int)(origStat * weight);
     }
     public int CalculateDamage(Skill casted, int atkStat, int spAtkStat, int defStat, int spDefStat, string defType)

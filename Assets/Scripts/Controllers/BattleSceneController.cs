@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -53,14 +54,14 @@ public class BattleSceneController : MonoBehaviour
     {
         if (model.charaStatus[model.currentChara].tmpSpeed >= model.enemyStatus.tmpSpeed)
         {
-            yield return StartCoroutine(UsePlayerSkillCoroutine(skillIdx));
+            yield return UseSkillCoroutine(true, skillIdx);
             if (model.isOver)
             {
                 view.ShowGameOver(model.isWin);
                 yield break;
             }
 
-            yield return StartCoroutine(UseEnemySkillCoroutine());
+            yield return UseSkillCoroutine(false);
             if (model.isOver)
             {
                 view.ShowGameOver(model.isWin);
@@ -72,7 +73,7 @@ public class BattleSceneController : MonoBehaviour
         }
         else
         {
-            yield return StartCoroutine(UseEnemySkillCoroutine());
+            yield return UseSkillCoroutine(false);
             if (model.isOver)
             {
                 view.ShowGameOver(model.isWin);
@@ -83,7 +84,7 @@ public class BattleSceneController : MonoBehaviour
                 view.ShowSwitchPanel();
                 yield break;
             }
-            yield return StartCoroutine(UsePlayerSkillCoroutine(skillIdx));
+            yield return UseSkillCoroutine(true, skillIdx);
             if (model.isOver)
             {
                 view.ShowGameOver(model.isWin);
@@ -92,41 +93,168 @@ public class BattleSceneController : MonoBehaviour
             else view.SetSkillButtonsInteractable(true);
         }
     }
-    public void UsePlayerSkill(int skillIdx)
-    {
-        StartCoroutine(UsePlayerSkillCoroutine(skillIdx));
-    }
+    /*
     private IEnumerator UsePlayerSkillCoroutine(int skillIdx)
     {
         Skill castedSkill = model.charaSkills[skillIdx];
-        player.PlaySkillAnimation(castedSkill);
-        yield return view.SetLogtextAndWait($"{model.charaStatus[model.currentChara].charaName}은(는) {castedSkill.skill_name}을(를) 사용했다!");
+        view.SetLogtext($"{model.charaStatus[model.currentChara].charaName}은(는) {castedSkill.skill_name}을(를) 사용했다!");
+        if (castedSkill.damage_type == "랭크" && castedSkill.base_power / 10 % 10 == 1) // 랭크 스킬
+        {
+            yield return enemy.PlaySkillAnimation(castedSkill);
+        }
+        else
+        {
+            yield return player.PlaySkillAnimation(castedSkill);
+        }
+        switch (castedSkill.damage_type)
+        {
+            case "랭크":
+                yield return UseRankSkillCoruoutine(castedSkill);
+                break;
+            case "제어":
+                // StartCoroutine(UseRankSkillCoruoutine(castedSkill));
+                break;
+            case "회복":
+                yield return UseHealSkillCoroutine(castedSkill);
+                break;
+            case "방어":
+                // StartCoroutine(UseRankSkillCoruoutine(castedSkill));
+                break;
+            default:
+                yield return UseDamageSkillCoroutine(castedSkill);
+                break;
+        }
+    }
+    */
 
-        // if 공격스킬
-        int atkStat = model.charaStatus[model.currentChara].tmpAtk;
-        int spAtkStat = model.charaStatus[model.currentChara].tmpSpAtk;
-        int defStat = model.enemyStatus.tmpDef;
-        int spDefStat = model.enemyStatus.tmpSpDef;
-        string defType = model.enemyStatus.charaType;
+    private IEnumerator UseSkillCoroutine(bool isPlayer, int skillIdx = 0)
+    {
+        if (!isPlayer){skillIdx = Random.Range(0, model.enemySkills.Count);}
+        Skill castedSkill = isPlayer ? model.charaSkills[skillIdx] : model.enemySkills[skillIdx];
+        PlayerManager sourcePlayer = isPlayer ? player : enemy;
+        PlayerManager destinationPlayer = isPlayer ? enemy : player;
+        CurrentCharacterStatus source = isPlayer ? model.charaStatus[model.currentChara] : model.enemyStatus;
+        CurrentCharacterStatus destination = isPlayer ? model.enemyStatus : model.charaStatus[model.currentChara];
+
+        view.SetLogtext($"{source.charaName}은(는) {castedSkill.skill_name}을(를) 사용했다!");
+
+        if (castedSkill.damage_type == "랭크" && castedSkill.base_power / 10 % 10 == 1) // 랭크 스킬
+        {
+            yield return destinationPlayer.PlaySkillAnimation(castedSkill);
+        }
+        else
+        {
+            yield return sourcePlayer.PlaySkillAnimation(castedSkill);
+        }
+        switch (castedSkill.damage_type)
+        {
+            case  "랭크":
+                yield return UseRankSkillCoruoutine(castedSkill, source, destination);
+                break;
+            case "제어":
+                // StartCoroutine(UseRankSkillCoruoutine(castedSkill));
+                break;
+            case "회복":
+                yield return UseHealSkillCoroutine(castedSkill, source);
+                break;
+            case "방어":
+                // StartCoroutine(UseRankSkillCoruoutine(castedSkill));
+                break;
+            default:
+                yield return UseDamageSkillCoroutine(castedSkill, source, destination, destinationPlayer);
+                break;
+        }
+    }
+    private IEnumerator UseDamageSkillCoroutine(Skill castedSkill, CurrentCharacterStatus source, CurrentCharacterStatus destination, PlayerManager destinationPlayer)
+    {
+        int atkStat = source.tmpAtk;
+        int spAtkStat = source.tmpSpAtk;
+        int defStat = destination.tmpDef;
+        int spDefStat = destination.tmpSpDef;
+        string defType = destination.charaType;
 
         int damage = model.CalculateDamage(castedSkill, atkStat, spAtkStat, defStat, spDefStat, defType);
 
-        enemy.PlayHitAnimation();
+        destinationPlayer.PlayHitAnimation();
 
-        model.enemyStatus.currentHp -= damage;
-        view.UpdateStatusPanel(status: model.enemyStatus, isEnemy: true);
-        yield return view.SetLogtextAndWait($"{model.enemyStatus.charaName}에게 {damage}의 데미지!");
-        if (model.enemyStatus.currentHp <= 0)
+        destination.currentHp -= damage;
+        view.UpdateStatusPanel(status: destination, isEnemy: destination == model.enemyStatus);
+        yield return view.SetLogtextAndWait($"{destination.charaName}에게 {damage}의 데미지!");
+        if (destination.currentHp <= 0)
         {
-            model.enemyStatus.currentHp = 0;
-            model.enemyStatus.isAlive = false;
-            yield return view.SetLogtextAndWait($"{model.enemyStatus.charaName}은(는) 쓰러졌다!");
+            destination.currentHp = 0;
+            destination.isAlive = false;
+            yield return view.SetLogtextAndWait($"{destination.charaName}은(는) 쓰러졌다!");
             CheckGameState();
         }
     }
-    public void UseEnemySkill()
+    private IEnumerator UseRankSkillCoruoutine(Skill castedSkill, CurrentCharacterStatus source, CurrentCharacterStatus destination)
     {
-        StartCoroutine(UseEnemySkillCoroutine());
+        // 랭크 스킬 사용 로직
+        CurrentCharacterStatus target = castedSkill.base_power / 10 % 10 == 0 ? source : destination;
+        int step = castedSkill.base_power / 100 * ((castedSkill.base_power / 10 % 10) == 0 ? 1 : -1);
+        string targetStat = "오류";
+        Debug.Log($"RankUpStat: {castedSkill.base_power}, step: {step}");
+        switch (castedSkill.base_power % 10)
+        {
+            case 0: // 공격력 증가
+                targetStat = "체력";
+                target.maxHp = model.RankUpStat(target.maxHp, step);
+                target.currentHp = model.RankUpStat(target.currentHp, step);
+                break;
+            case 1: // 방어력 증가
+                targetStat = "공격력";
+                target.tmpAtk = model.RankUpStat(target.tmpAtk, step);
+                break;
+            case 2: // 특수 공격력 증가
+                targetStat = "방어력";
+                target.tmpDef = model.RankUpStat(target.tmpDef, step);
+                break;
+            case 3: // 특수 방어력 증가
+                targetStat = "특수 공격력";
+                target.tmpSpAtk = model.RankUpStat(target.tmpSpAtk, step);
+                break;
+            case 4: // 속도 증가
+                targetStat = "특수 방어력";
+                target.tmpSpDef = model.RankUpStat(target.tmpSpDef, step);
+                break;
+            case 5: // 속도 증가
+                targetStat = "스피드";
+                target.tmpSpeed = model.RankUpStat(target.tmpSpeed, step);
+                break;
+            default:
+                Debug.LogError("Invalid rank skill type");
+                break;
+        }
+        string verb = castedSkill.base_power / 10 % 10 == 0 ? "증가" : "감소";
+        string adjective = "";
+        if (step == 2 || step == -2)
+        {
+            adjective = " 크게";
+        }
+        if (step == 3 || step == -3)
+        {
+            adjective = " 매우 크게";
+        }
+        yield return view.SetLogtextAndWait($"{target.charaName}의 {targetStat}이{adjective} {verb}했다!");
+    }
+
+    private IEnumerator UseHealSkillCoroutine(Skill castedSkill, CurrentCharacterStatus character)
+    {
+        int hp = character.currentHp;
+        int maxHp = character.maxHp;
+        int healAmount = (int)(castedSkill.base_power / 100f * 0.5f * maxHp / (character.healCount+1));
+        character.healCount += 1; // 회복 횟수 증가
+        Debug.Log($"HealAmount: {healAmount}, Current HP: {hp}, Max HP: {maxHp}, basepower {castedSkill.base_power}");
+
+        character.currentHp += healAmount;
+        if (character.currentHp > character.maxHp)
+        {
+            character.currentHp = character.maxHp;
+        }
+        Debug.Log($"HealAmount: {healAmount}, Current HP: {character.currentHp}, Max HP: {character.maxHp}");
+        view.UpdateStatusPanel(status: character, isEnemy: character == model.enemyStatus);
+        yield return view.SetLogtextAndWait($"{character.charaName}이(가) {healAmount}의 체력을 회복했다!");
     }
 
     private IEnumerator UseEnemySkillCoroutine()
@@ -134,8 +262,8 @@ public class BattleSceneController : MonoBehaviour
         // 랜덤하게 스킬 선택
         int idx = Random.Range(0, 4);
         Skill castedSkill = model.enemySkills[idx];
-        enemy.PlaySkillAnimation(castedSkill);
-        yield return view.SetLogtextAndWait($"{model.enemyStatus.charaName}은(는) {castedSkill.skill_name}을(를) 사용했다!");
+        view.SetLogtext($"{model.enemyStatus.charaName}은(는) {castedSkill.skill_name}을(를) 사용했다!");
+        yield return enemy.PlaySkillAnimation(castedSkill);
 
         // if 공격스킬
         int atkStat = model.enemyStatus.tmpAtk;
@@ -229,7 +357,7 @@ public class BattleSceneController : MonoBehaviour
 
         if (!model.isDead) // 안죽었는데 교체로 턴 사용 -> 교체 후 상대 공격
         {
-            yield return StartCoroutine(UseEnemySkillCoroutine());
+            yield return StartCoroutine(UseSkillCoroutine(false));
             if (model.isOver)
             {
                 view.ShowGameOver(model.isWin);

@@ -36,6 +36,7 @@ public class CurrentCharacterStatus
     public int tmpSpDef;
     public int tmpSpeed;
     public bool isAlive;
+    public int healCount;
 }
 public class GameDataManager : MonoBehaviour
 {
@@ -130,6 +131,7 @@ public class GameDataManager : MonoBehaviour
                 status.tmpSpDef = characters[i].stats.sp_def;
                 status.tmpSpeed = characters[i].stats.speed;
                 status.isAlive = true;
+                status.healCount = 0;
                 charaStatus.Add(status);
             }
         }

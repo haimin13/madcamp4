@@ -1,8 +1,8 @@
 {
     "characters": [
         {
-            "character_name": "바보 수호자 푸딩",
-            "description": "오직 팀을 보호하고 지원하는 데만 특화된 순진하고 우직한 캐릭터.",
+            "character_name": "별의 커비",
+            "description": "모든것을 빨아들이고 카피할 수 있지만 오늘은 이상한 능력만 가져온 분홍색 푸딩.",
             "image_url": "/static/images/image_69428d42-41a5-45d2-88fd-ebd81cdf6ea0.png",
             "stats": {
                 "hp": 120,
@@ -28,7 +28,7 @@
                 "laser_effect": null
                 },
                 {
-                "skill_name": "어리숙한 격려",
+                "skill_name": "단단해지기",
                 "description": "자신의 방어력을 2랭크 상승시킵니다.",
                 "base_power": 202,
                 "damage_type": "랭크",
@@ -178,8 +178,8 @@
             "stats": {
                 "hp": 100,
                 "atk": 60,
-                "def": 70,
-                "sp_atk": 120,
+                "def": 1000,
+                "sp_atk": 1200,
                 "sp_def": 80,
                 "speed": 70
             },

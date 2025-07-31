@@ -121,6 +121,12 @@ public class BattleSceneView : MonoBehaviour
         logText.text = first + "\n" + second;
         yield return new WaitForSeconds(wait);
     }
+    public void SetLogtext(string sentence = " ")
+    {
+        first = second;
+        second = sentence;
+        logText.text = first + "\n" + second;
+    }
     public void OnSwitchPanelButtonClicked()
     {
         ShowSwitchPanel();

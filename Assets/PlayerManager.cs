@@ -12,6 +12,7 @@ public class PlayerManager : MonoBehaviour
     public bool isEnemy = false;
     public Color statUpColor = Color.red;
     public Color statDownColor = Color.blue;
+    public ParticleSystem healParticle;
     private Vector3 originalPosition;
     private SpriteRenderer characterSprite;
     private Material effectMaterial;
@@ -36,20 +37,20 @@ public class PlayerManager : MonoBehaviour
     /// <summary>
     /// 스킬 데이터에 따라 적절한 애니메이션 코루틴을 실행합니다.
     /// </summary>
-    public void PlaySkillAnimation(Skill skill)
+    public IEnumerator PlaySkillAnimation(Skill skill)
     {
         Debug.Log($"스킬 애니메이션 재생: {skill.skill_name}, 타입: {skill.visual_effect_type}, 공격종류: {skill.damage_type}");
         // 스킬의 시각 효과 타입에 따라 다른 코루틴을 호출합니다.
         switch (skill.damage_type)
         {
             case "랭크":
-                StartCoroutine(RankCoroutine(true));
+                yield return RankCoroutine(skill.base_power / 10 % 10 == 0);
                 break;
             case "제어":
                 //StartCoroutine(ControlCoroutine(skill.shake_effect));
                 break;
             case "회복":
-                //StartCoroutine(HealCoroutine(skill.shake_effect));
+                yield return HealCoroutine(skill.shake_effect);
                 break;
             case "방어":
                 //StartCoroutine(DefenseCoroutine(skill.shake_effect));
@@ -59,15 +60,15 @@ public class PlayerManager : MonoBehaviour
                 {
                     case "Shake":
                         // Shake 효과에 필요한 데이터를 넘겨줍니다.
-                        StartCoroutine(ShakeCoroutine(skill.shake_effect));
+                        yield return ShakeCoroutine(skill.shake_effect);
                         break;
                     case "Projectile":
                         // Projectile 효과에 필요한 데이터를 넘겨줍니다.
-                        StartCoroutine(ProjectileCoroutine(skill.projectile_effect));
+                        yield return ProjectileCoroutine(skill.projectile_effect);
                         break;
                     case "Laser":
                         // Laser 효과에 필요한 데이터를 넘겨줍니다.
-                        StartCoroutine(LaserCoroutine(skill.laser_effect));
+                        yield return LaserCoroutine(skill.laser_effect);
                         break;
                 }
                 break;
@@ -268,6 +269,21 @@ public class PlayerManager : MonoBehaviour
 
         // 3. 애니메이션이 끝나면 효과를 완전히 끕니다.
         effectMaterial.SetFloat("_Alpha", 0f);
+    }
+
+    private IEnumerator HealCoroutine(ShakeEffect effectData)
+    {
+        Debug.Log($"회복 애니메이션 재생: 파티클 색상 {effectData.particle_color}");
+        float duration = 1f;
+        Color color = Color.green;
+        if (ColorUtility.TryParseHtmlString(effectData.particle_color, out Color tryColor))
+        {
+            color = tryColor;
+        }
+        var main = healParticle.main;
+        main.startColor = color;
+        healParticle.Play();
+        yield return BlinkCoroutine(color, 1, duration);
     }
 
     /// <summary>
