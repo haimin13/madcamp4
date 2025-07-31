@@ -21,6 +21,7 @@ public class ClearSceneManager : MonoBehaviour
         debug = false;
 
         AudioManager.Instance.StopBGM();
+        AudioManager.Instance.PlayGameClear();
         ShowCharacters();
         sendButton.onClick.AddListener(SendCharacters);
     }

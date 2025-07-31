@@ -21,6 +21,7 @@ public class AudioManager : MonoBehaviour
     public AudioClip control;
     public AudioClip gameOver;
     public AudioClip stageClear;
+    public AudioClip gameClear;
 
     private static AudioManager instance;
     public static AudioManager Instance
@@ -73,6 +74,7 @@ public class AudioManager : MonoBehaviour
         control = Resources.Load<AudioClip>("Control");
         gameOver = Resources.Load<AudioClip>("GameOver");
         stageClear = Resources.Load<AudioClip>("StageClear");
+        gameClear = Resources.Load<AudioClip>("Clear");
     }
 
     // 효과음 재생용 예시 메서드
@@ -163,6 +165,11 @@ public class AudioManager : MonoBehaviour
     public void PlayGameOver()
     {
         audioSource.clip = gameOver;
+        audioSource.Play();
+    }
+    public void PlayGameClear()
+    {
+        audioSource.clip = gameClear;
         audioSource.Play();
     }
 }
