@@ -307,7 +307,7 @@ public class PlayerManager : MonoBehaviour
                 controlColor = tryColor;
             }
         }
-        //AudioManager.Instance.PlayControl(); 사운드 추가해줘
+        AudioManager.Instance.PlayControl();
         Debug.Log($"제어 애니메이션 재생: 색상 {controlColor}");
         yield return BlinkCoroutine(controlColor, 1, duration);
     }
